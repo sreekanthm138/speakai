@@ -34,6 +34,6 @@ export default function App(){
       <Route path='*' element={<NotFound/>}/>
     </Routes>
     <Footer/>
-    <a className='fixed right-4 bottom-4 bg-green-500 text-black font-semibold px-4 py-2 rounded-full shadow-soft' href='https://wa.me/91XXXXXXXXXX' target='_blank' rel='noreferrer'>WhatsApp</a>
+    <a className='fixed right-4 bottom-4 bg-green-500 text-black font-semibold px-4 py-2 rounded-full shadow-soft' href='https://wa.me/919110733750' target='_blank' rel='noreferrer'>WhatsApp</a>
   </div>)
 }
