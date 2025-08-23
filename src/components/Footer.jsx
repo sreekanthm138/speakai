@@ -1,0 +1,1 @@
+export default function Footer(){return(<footer className='border-t border-border mt-10'><div className='container-p py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-muted'><div>© 2025 SpeakAI</div><div className='flex gap-4'><a href='/privacy'>Privacy</a><a href='/terms'>Terms</a><a href='/affiliate-disclosure'>Affiliate</a></div></div></footer>)}

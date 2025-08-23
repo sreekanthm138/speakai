@@ -1,0 +1,1 @@
+export default function Terms(){return(<main className='container-p py-10 max-w-3xl'><h1 className='text-3xl font-bold'>Terms</h1><p>All content is educational. Do not republish without permission.</p></main>)}

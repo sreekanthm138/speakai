@@ -1,0 +1,1 @@
+export default function Privacy(){return(<main className='container-p py-10 max-w-3xl'><h1 className='text-3xl font-bold'>Privacy Policy</h1><p>This site collects form submissions to deliver newsletters and downloads. We do not sell your data.</p></main>)}

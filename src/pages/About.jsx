@@ -1,0 +1,1 @@
+export default function About(){return(<main className='container-p py-10 max-w-3xl'><h1 className='text-3xl font-bold'>About SpeakAI</h1><p>SpeakAI is a small project by Kanthu to make interview preparation practical.</p></main>)}

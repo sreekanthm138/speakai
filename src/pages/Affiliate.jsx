@@ -1,0 +1,1 @@
+export default function Affiliate(){return(<main className='container-p py-10 max-w-3xl'><h1 className='text-3xl font-bold'>Affiliate Disclosure</h1><p>Some links may be affiliate links. We only recommend what we trust.</p></main>)}

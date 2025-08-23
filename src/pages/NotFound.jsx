@@ -1,0 +1,1 @@
+export default function NotFound(){return(<main className='container-p py-24 text-center'><h1 className='text-4xl font-bold'>404 — Page not found</h1><p className='text-muted'>Try the blog or home page.</p><p className='mt-4'><a className='btn btn-primary' href='/'>Go Home</a> <a className='btn ml-2 border' href='/blog'>Go to Blog</a></p></main>)}
