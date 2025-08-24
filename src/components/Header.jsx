@@ -39,6 +39,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-2">
           {link('/', 'Home')}
           {link('/blog', 'Blog')}
+          {link('/coach', 'Coach')}
           {link('/free-prompts', 'Free Prompts')}
           {link('/services', 'Services')}
           {link('/resources', 'Resources')}

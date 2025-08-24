@@ -14,6 +14,7 @@ import Privacy from './pages/Privacy.jsx'
 import Terms from './pages/Terms.jsx'
 import Affiliate from './pages/Affiliate.jsx'
 import NotFound from './pages/NotFound.jsx'
+import Coach from './pages/Coach.jsx'
 
 export default function App(){
   return (<div>
@@ -21,6 +22,7 @@ export default function App(){
     <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/blog' element={<Blog/>}/>
+      <Route path="/coach" element={<Coach />} />
       <Route path='/blog/:slug' element={<Post/>}/>
       <Route path='/free-prompts' element={<FreePrompts/>}/>
       <Route path='/thank-you' element={<ThankYou/>}/>
