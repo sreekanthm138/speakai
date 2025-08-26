@@ -62,16 +62,27 @@ export default function ChatRoom() {
 
   const handleSend = async (text) => {
     if (!text.trim()) return;
-    const message = {
-      user_id: user.id,
-      email: user.email,
-      text,
-      created_at: new Date().toISOString(),
-    };
-    setMessages((prev) => [...prev, message]);
 
-    const { error } = await supabase.from("messages").insert(message);
-    if (error) alert(error.message);
+    // Insert into DB and ask Supabase to return the row
+    const { data, error } = await supabase
+      .from("messages")
+      .insert({
+        user_id: user.id,
+        email: user.email,
+        text: text.trim(),
+      })
+      .select()
+      .single(); // 👈 ensures you get the inserted row
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    // Optional: if realtime is ON, you don’t need this next line because
+    // the INSERT subscription will add the row automatically.
+    // But if you want instant feedback, you can also do:
+    setMessages((prev) => [...prev, data]);
   };
 
   const handleDelete = async (id) => {
