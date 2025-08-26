@@ -62,11 +62,15 @@ export default function ChatRoom() {
 
   const handleSend = async (text) => {
     if (!text.trim()) return;
-    const { error } = await supabase.from("messages").insert({
+    const message = {
       user_id: user.id,
-      text,
       email: user.email,
-    });
+      text,
+      created_at: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, message]);
+
+    const { error } = await supabase.from("messages").insert(message);
     if (error) alert(error.message);
   };
 
