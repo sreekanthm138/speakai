@@ -2,6 +2,36 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import MicButton from "../components/MicButton.jsx";
 import { wordsPerMinute, fillerCounts, starGuess } from "../util/metrics.js";
 
+const ROLE_SKILLS = {
+  "Software Engineer": [
+    "JavaScript",
+    "React",
+    "Node.js",
+    "Java",
+    "Python",
+    "DSA",
+    "System Design",
+    "HTML/CSS",
+    "TypeScript",
+  ],
+
+  "Product Manager": [
+    "Product Sense",
+    "Roadmaps",
+    "Analytics",
+    "Prioritization",
+    "Stakeholder Management",
+  ],
+
+  "Data Analyst": ["SQL", "Python", "Excel", "Power BI", "Statistics"],
+
+  "BPO/Support": [
+    "Customer Handling",
+    "Communication",
+    "Escalation",
+    "Email Support",
+  ],
+};
 /* -------------------- Local cache for generated question sets -------------------- */
 const CACHE_KEY = "speakai_qbank_v1";
 const ttlMs = 7 * 24 * 60 * 60 * 1000; // 7 days
@@ -37,6 +67,7 @@ function cacheSet(key, data) {
 export default function Coach() {
   // Question generator controls
   const [role, setRole] = useState("Software Engineer");
+  const [skill, setSkill] = useState(ROLE_SKILLS["Software Engineer"][0]);
   const [qType, setQType] = useState("behavioral"); // behavioral | technical | mixed
   const [difficulty, setDifficulty] = useState("mixed"); // easy | medium | hard | mixed
   const [count, setCount] = useState(5);
@@ -91,7 +122,7 @@ export default function Coach() {
   }, [status, useCountdown, seconds, limit]);
 
   /* ---------------------- Generate / cache question sets ---------------------- */
-  const key = JSON.stringify({ role, qType, difficulty, count });
+  const key = JSON.stringify({ role, skill, qType, difficulty, count });
 
   // When params change, try to load from cache; otherwise mark dirty (enable Generate)
   useEffect(() => {
@@ -117,7 +148,7 @@ export default function Coach() {
       const r = await fetch("/.netlify/functions/gen-questions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role, type: qType, difficulty, count }),
+        body: JSON.stringify({ role, skill, type: qType, difficulty, count }),
       });
       const data = await r.json();
       if (Array.isArray(data.questions) && data.questions.length) {
@@ -159,7 +190,7 @@ export default function Coach() {
       const r = await fetch("/.netlify/functions/ai-feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role, question: currentQuestion, transcript }),
+        body: JSON.stringify({ role, skill, question: currentQuestion, transcript }),
       });
       const data = await r.json();
       setFeedback(data);
@@ -178,6 +209,7 @@ export default function Coach() {
     const entry = {
       ts: Date.now(),
       role,
+      skill,
       question: currentQuestion,
       transcript,
       metrics,
@@ -186,7 +218,7 @@ export default function Coach() {
     const old = JSON.parse(localStorage.getItem("speakai_sessions") || "[]");
     localStorage.setItem(
       "speakai_sessions",
-      JSON.stringify([entry, ...old].slice(0, 50))
+      JSON.stringify([entry, ...old].slice(0, 50)),
     );
     alert("Session saved ✅");
   };
@@ -198,7 +230,7 @@ export default function Coach() {
       star: starGuess(transcript),
       duration: seconds,
     }),
-    [transcript, seconds]
+    [transcript, seconds],
   );
 
   const prettyTime = (s) =>
@@ -231,6 +263,21 @@ export default function Coach() {
               <option>Marketing</option>
               <option>Sales</option>
               <option>Designer</option>
+            </select>
+          </div>
+          <div>
+            <label className="block mb-1">Skill</label>
+
+            <select
+              className="input"
+              value={skill}
+              onChange={(e) => setSkill(e.target.value)}
+            >
+              {ROLE_SKILLS[role]?.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -539,7 +586,7 @@ export default function Coach() {
 
 function SavedSessions() {
   const [items, setItems] = useState(() =>
-    JSON.parse(localStorage.getItem("speakai_sessions") || "[]")
+    JSON.parse(localStorage.getItem("speakai_sessions") || "[]"),
   );
   const clear = () => {
     localStorage.removeItem("speakai_sessions");

@@ -1,15 +1,15 @@
 export default function Footer() {
   return (
-    <footer className="border-t border-border/80 mt-16">
+    <footer className="border-t bg-card/50 backdrop-blur py-8">
       <div className="container-p py-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-muted">
-        
         {/* Left column */}
         <div>
           <div className="flex items-center gap-2 font-bold text-text mb-2">
             <img src="/logo.svg" className="w-6 h-6" alt="SpeakAI" /> SpeakAI
           </div>
           <p className="text-sm">
-            Interview better with practical AI prompts, tools, and step-by-step guides.
+            Interview better with practical AI prompts, tools, and step-by-step
+            guides.
           </p>
         </div>
 
@@ -43,5 +43,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

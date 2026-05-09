@@ -26,48 +26,50 @@ import Chat from "./pages/Chat.jsx";
 export default function App() {
   return (
     <AuthProvider>
-      <div>
+      <div className="flex flex-col min-h-screen">
         <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<Post />} />
-          <Route path="/free-prompts" element={<FreePrompts />} />
-          <Route path="/thank-you" element={<ThankYou />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/resources" element={<Resources />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/affiliate-disclosure" element={<Affiliate />} />
+        <div className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<Post />} />
+            <Route path="/free-prompts" element={<FreePrompts />} />
+            <Route path="/thank-you" element={<ThankYou />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/affiliate-disclosure" element={<Affiliate />} />
 
-          {/* Auth routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
+            {/* Auth routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
 
-          {/* Protect /coach */}
-          <Route
-            path="/coach"
-            element={
-              <ProtectedRoute>
-                <Coach />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/chat"
-            element={
-              <ProtectedRoute>
-                <Chat />
-              </ProtectedRoute>
-            }
-          />
+            {/* Protect /coach */}
+            <Route
+              path="/coach"
+              element={
+                <ProtectedRoute>
+                  <Coach />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route
+              path="/chat"
+              element={
+                <ProtectedRoute>
+                  <Chat />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
         <Footer />
         <a
           className="fixed right-4 bottom-4 bg-green-500 text-black font-semibold px-4 py-2 rounded-full shadow-soft"
