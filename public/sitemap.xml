@@ -59,6 +59,17 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+  <loc>https://speakai.in/blog/react-interview-questions</loc>
+</url>
+
+<url>
+  <loc>https://speakai.in/blog/javascript-interview-questions</loc>
+</url>
+
+<url>
+  <loc>https://speakai.in/blog/frontend-developer-roadmap</loc>
+</url>
 
   <!-- Legal pages -->
   <url>
