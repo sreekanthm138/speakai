@@ -5,7 +5,6 @@ export default async (req) => {
 
   try {
     const { name, email, message } = await req.json();
-console.log('RESEND DATA:', JSON.stringify(data))
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -31,6 +30,7 @@ console.log('RESEND DATA:', JSON.stringify(data))
     });
 
     const data = await response.json();
+console.log('RESEND DATA:', JSON.stringify(data))
 
     return Response.json({
       success: true,
