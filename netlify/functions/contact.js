@@ -13,7 +13,7 @@ export default async (req) => {
       },
       body: JSON.stringify({
         from: "SpeakAI <onboarding@resend.dev>",
-        to: ["sreekanth.maramesi@gmail.com"],
+        to: ["sreekanthm138@gmail.com"],
         subject: `New Contact Message from ${name}`,
         html: `
           <h2>New Contact Message</h2>
@@ -30,7 +30,6 @@ export default async (req) => {
     });
 
     const data = await response.json();
-console.log('RESEND DATA:', JSON.stringify(data))
 
     return Response.json({
       success: true,
