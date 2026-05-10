@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
       (_event, newSession) => {
         setSession(newSession);
         setUser(newSession?.user ?? null);
-      }
+      },
     );
 
     return () => {
@@ -41,11 +41,25 @@ export const AuthProvider = ({ children }) => {
       session,
       loading,
       signUpWithEmail: async (email, password) => {
-        const { error } = await supabase.auth.signUp({ email, password });
-        if (!error) {
-          await supabase.from("profiles").upsert({ id: user?.id, email });
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        if (error) {
+          return { error };
         }
-        return { error };
+
+        const { error: profileError } = await supabase.from("profiles").upsert({
+          id: data.user.id,
+          email: data.user.email,
+        });
+
+        if (profileError) {
+          console.log(profileError);
+        }
+
+        return { error: null };
       },
       signInWithEmail: async (email, password) => {
         const { error } = await supabase.auth.signInWithPassword({
@@ -66,7 +80,7 @@ export const AuthProvider = ({ children }) => {
         await supabase.auth.signOut();
       },
     }),
-    [user, session, loading]
+    [user, session, loading],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
