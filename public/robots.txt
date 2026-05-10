@@ -5,4 +5,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /dev/
 
-Sitemap: https://speakai.in/sitemap.xml
+Sitemap: https://speakai.in/.netlify/functions/sitemap

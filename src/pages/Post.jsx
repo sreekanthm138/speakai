@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { supabase } from "../auth/supabaseClient.js";
+import { Helmet } from "react-helmet-async";
 
 export default function Post() {
   const { slug } = useParams();
@@ -8,6 +9,7 @@ export default function Post() {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [headings, setHeadings] = useState([]);
+  const [relatedBlogs, setRelatedBlogs] = useState([]);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -42,6 +44,14 @@ export default function Post() {
         data.content = doc.body.innerHTML;
 
         setBlog(data);
+        const { data: related } = await supabase
+          .from("blogs")
+          .select("*")
+          .neq("slug", slug)
+          .eq("category", data.category)
+          .limit(3);
+
+        setRelatedBlogs(related || []);
       }
 
       setLoading(false);
@@ -52,11 +62,33 @@ export default function Post() {
 
   if (loading) {
     return (
-      <main className="container-p py-12 min-h-screen">
-        <div className="card">
-          <p>Loading article...</p>
-        </div>
-      </main>
+      <>
+        <Helmet>
+            <title>{`${blog?.title} | SpeakAI`}</title>
+
+          <meta name="description" content={blog?.description} />
+
+          <meta name="keywords" content={blog?.keywords} />
+
+          <meta property="og:title" content={blog?.title} />
+
+          <meta property="og:description" content={blog?.description} />
+
+          <meta property="og:image" content={blog?.cover_image} />
+
+          <meta property="og:type" content="article" />
+
+          <meta
+            property="og:url"
+            content={`https://speakai.in/blog/${blog?.slug}`}
+          />
+        </Helmet>
+        <main className="container-p py-12 min-h-screen">
+          <div className="card">
+            <p>Loading article...</p>
+          </div>
+        </main>
+      </>
     );
   }
 
@@ -178,6 +210,53 @@ export default function Post() {
           </article>
         </div>
       </section>
+      {/* Related Blogs */}
+      {relatedBlogs.length > 0 && (
+        <section className="mt-20">
+          <div className="border-t border-white/10 pt-10">
+            <h2 className="text-3xl font-bold mb-8">Related Articles</h2>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {relatedBlogs.map((item) => (
+                <Link
+                  key={item.id}
+                  to={`/blog/${item.slug}`}
+                  className="group rounded-3xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-indigo-500/30 transition"
+                >
+                  <img
+                    src={
+                      item.cover_image ||
+                      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
+                    }
+                    alt={item.title}
+                    className="h-48 w-full object-cover"
+                  />
+
+                  <div className="p-5">
+                    <div className="flex items-center gap-3 text-sm text-gray-400">
+                      <span className="rounded-full bg-indigo-500/10 px-3 py-1 text-indigo-300">
+                        {item.category}
+                      </span>
+                    </div>
+
+                    <h3 className="mt-4 text-xl font-bold text-white group-hover:text-indigo-400 transition">
+                      {item.title}
+                    </h3>
+
+                    <p className="mt-3 text-gray-400 line-clamp-2">
+                      {item.description}
+                    </p>
+
+                    <div className="mt-5 text-indigo-400 text-sm">
+                      Read article →
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
