@@ -20,26 +20,40 @@ export default async (req) => {
       type = "behavioral",
       difficulty = "mixed",
       count = 5,
+      resumeText = "",
     } = (await req.json()) || {};
     if (process.env.MOCK_AI === "true") {
       return json({ questions: mock(role, skill, type, count) });
     }
 
     const prompt = `
-Generate ${count} ${type} interview questions.
+Generate ${count} professional interview questions.
 
-Role: ${role}
-Skill: ${skill}
-Difficulty: ${difficulty}
+Interview Type:
+${type}
+
+Role:
+${role}
+
+Primary Skill:
+${skill}
+
+Difficulty:
+${difficulty}
+
 Resume:
 ${resumeText || "No resume provided"}
 
 Requirements:
-- Ask only relevant ${skill} questions
+- Ask only relevant questions
 - Mix conceptual + practical questions
-- Concise and interview-ready
-- Output strict JSON:
-{"questions":["Q1","Q2"]}
+- Simulate real company interviews
+- Questions should become progressively harder
+- Include real-world scenarios
+- Avoid repetition
+- Sound natural and conversational
+- Keep questions concise
+- Interview-ready formatting
 
 If resume content is provided:
 - generate personalized questions
@@ -48,6 +62,17 @@ If resume content is provided:
 - ask scenario-based follow-up questions
 - ask experience-specific questions
 
+Output STRICT JSON ONLY:
+{
+  "questions": [
+    "Question 1",
+    "Question 2"
+  ]
+}
+
+Do NOT return markdown.
+Do NOT wrap JSON inside \`\`\`json.
+Return ONLY valid JSON.
 `.trim();
 
     const models = [PRIMARY_MODEL, FALLBACK_MODEL];
