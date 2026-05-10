@@ -327,7 +327,7 @@ export default function Coach() {
                   <label className="block mb-2 text-sm">Role</label>
 
                   <select
-                    className="input"
+                    className="input bg-[#111827] text-white"
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
                   >
@@ -346,7 +346,7 @@ export default function Coach() {
                   <label className="block mb-2 text-sm">Skill</label>
 
                   <select
-                    className="input"
+                    className="input bg-[#111827] text-white"
                     value={skill}
                     onChange={(e) => setSkill(e.target.value)}
                   >
@@ -358,12 +358,17 @@ export default function Coach() {
                   </select>
                 </div>
 
+                <div className="border-t border-white/10 my-2" />
+
+                <h3 className="text-lg font-semibold mt-2">
+                  Question Settings
+                </h3>
                 {/* Type */}
                 <div>
                   <label className="block mb-2 text-sm">Question Type</label>
 
                   <select
-                    className="input"
+                    className="input bg-[#111827] text-white"
                     value={qType}
                     onChange={(e) => setQType(e.target.value)}
                   >
@@ -380,7 +385,7 @@ export default function Coach() {
                   <label className="block mb-2 text-sm">Difficulty</label>
 
                   <select
-                    className="input"
+                    className="input bg-[#111827] text-white"
                     value={difficulty}
                     onChange={(e) => setDifficulty(e.target.value)}
                   >
@@ -396,7 +401,7 @@ export default function Coach() {
                   <label className="block mb-2 text-sm">Questions</label>
 
                   <select
-                    className="input"
+                    className="input bg-[#111827] text-white"
                     value={count}
                     onChange={(e) => setCount(Number(e.target.value))}
                   >
@@ -426,7 +431,7 @@ export default function Coach() {
               </p>
 
               <textarea
-                className="input mt-5"
+                className="input mt-5 min-h-[260px]"
                 rows="8"
                 placeholder="Paste your resume here..."
                 value={resumeText}
@@ -473,9 +478,12 @@ export default function Coach() {
                 ))}
 
                 {!qList.length && (
-                  <p className="text-sm text-muted">
-                    Generate questions to begin.
-                  </p>
+                  <div className="rounded-2xl border border-dashed border-white/10 p-6 text-center">
+                    <p className="text-muted">
+                      Generate AI-powered interview questions to begin your mock
+                      interview.
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
@@ -489,7 +497,17 @@ export default function Coach() {
                 <div>
                   <p className="text-sm text-muted">Current Question</p>
 
-                  <h2 className="text-3xl font-bold leading-snug mt-3">
+                  <div className="flex items-center gap-3 mt-2">
+                    <div className="rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-xs text-indigo-300">
+                      Question {qIndex + 1} of {qList.length || 1}
+                    </div>
+
+                    <div className="rounded-full border border-white/10 px-3 py-1 text-xs text-muted">
+                      {difficulty}
+                    </div>
+                  </div>
+
+                  <h2 className="text-2xl lg:text-3xl font-bold leading-snug mt-5 max-w-5xl">
                     {currentQuestion || "Select a question"}
                   </h2>
                 </div>
@@ -520,7 +538,7 @@ export default function Coach() {
 
               {/* Wave Placeholder */}
               {/* Voice Visualizer */}
-              <div className="mt-8 rounded-3xl border border-white/10 bg-black/20 p-8">
+              <div className="mt-8 rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.01] p-8">
                 <div className="flex items-center justify-center gap-2 h-24">
                   {[...Array(24)].map((_, i) => (
                     <div
@@ -576,13 +594,9 @@ export default function Coach() {
                   onState={setStatus}
                 />
 
-                <button className="btn border" onClick={resetAll}>
-                  Reset
-                </button>
-
                 {status === "recording" && (
                   <button
-                    className="btn border"
+                    className="rounded-2xl border border-red-500/20 bg-red-500/10 px-6 py-3 font-semibold text-red-300 hover:bg-red-500/20 transition"
                     onClick={() => micRef.current?.stop?.()}
                   >
                     Stop Recording
@@ -590,7 +604,14 @@ export default function Coach() {
                 )}
 
                 <button
-                  className="btn btn-primary"
+                  className="rounded-2xl border border-white/10 px-6 py-3 text-gray-400 hover:bg-white/5 transition"
+                  onClick={resetAll}
+                >
+                  Reset
+                </button>
+
+                <button
+                  className="rounded-2xl border border-indigo-500/20 bg-indigo-500/10 px-6 py-3 font-semibold text-indigo-300 hover:bg-indigo-500/20 transition"
                   onClick={askAI}
                   disabled={
                     loading || !transcript.trim() || status === "recording"
@@ -606,7 +627,7 @@ export default function Coach() {
               <h3 className="text-2xl font-bold">Transcript</h3>
 
               <textarea
-                className="input mt-5"
+                className="input mt-5 min-h-[260px]"
                 rows="10"
                 value={transcript}
                 onChange={(e) => setTranscript(e.target.value)}
@@ -891,11 +912,24 @@ export default function Coach() {
                 <button
                   className="btn btn-primary mt-6"
                   onClick={() => {
-                    setQList((prev) => [...prev, followUpQuestion]);
+                    const updated = [...qList, followUpQuestion];
 
-                    setQIndex(qList.length);
+                    setQList(updated);
+
+                    setQIndex(updated.length - 1);
 
                     setFollowUpQuestion("");
+
+                    setTranscript("");
+
+                    setInterim("");
+
+                    setFeedback(null);
+
+                    window.scrollTo({
+                      top: 0,
+                      behavior: "smooth",
+                    });
                   }}
                 >
                   Continue Interview
