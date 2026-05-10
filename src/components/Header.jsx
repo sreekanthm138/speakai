@@ -13,8 +13,16 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../auth/supabaseClient.js";
 
-const navItems = [
+const publicNavItems = [
   { label: "Home", path: "/" },
+  { label: "Blog", path: "/blog" },
+  { label: "Resources", path: "/resources" },
+  { label: "Contact", path: "/contact" },
+];
+
+const privateNavItems = [
+  { label: "Home", path: "/" },
+  { label: "Dashboard", path: "/dashboard" },
   { label: "Coach", path: "/coach" },
   { label: "Blog", path: "/blog" },
   { label: "Resources", path: "/resources" },
@@ -79,7 +87,7 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
+          {userData ? privateNavItems : publicNavItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
