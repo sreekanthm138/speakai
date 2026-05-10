@@ -87,7 +87,7 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {userData ? privateNavItems : publicNavItems.map((item) => (
+          {(userData ? privateNavItems : publicNavItems).map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
