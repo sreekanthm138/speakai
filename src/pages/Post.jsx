@@ -7,6 +7,7 @@ export default function Post() {
 
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [headings, setHeadings] = useState([]);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -19,6 +20,27 @@ export default function Post() {
       if (error) {
         console.error(error);
       } else {
+        const parser = new DOMParser();
+
+        const doc = parser.parseFromString(data.content, "text/html");
+
+        const extractedHeadings = [...doc.querySelectorAll("h2")].map(
+          (heading, index) => {
+            const id = `section-${index}`;
+
+            heading.id = id;
+
+            return {
+              id,
+              text: heading.textContent,
+            };
+          },
+        );
+
+        setHeadings(extractedHeadings);
+
+        data.content = doc.body.innerHTML;
+
         setBlog(data);
       }
 
@@ -47,8 +69,6 @@ export default function Post() {
       </main>
     );
   }
-
-  const sections = blog.content?.split("##").filter(Boolean);
 
   return (
     <main className="min-h-screen bg-[#070b17] text-white">
@@ -124,77 +144,37 @@ export default function Post() {
               <h3 className="text-2xl font-bold mb-6">On This Page</h3>
 
               <div className="space-y-4">
-                {sections?.map((section, i) => {
-                  const title = section.split("\n")[0].replace(/#/g, "").trim();
-
-                  return (
-                    <a
-                      key={i}
-                      href={`#section-${i}`}
-                      className="block text-gray-400 hover:text-indigo-400 transition leading-relaxed"
-                    >
-                      {i + 1}. {title}
-                    </a>
-                  );
-                })}
+                {headings.map((heading, i) => (
+                  <a
+                    key={heading.id}
+                    href={`#${heading.id}`}
+                    className="block text-gray-400 hover:text-indigo-400 transition leading-relaxed"
+                  >
+                    {i + 1}. {heading.text}
+                  </a>
+                ))}
               </div>
             </div>
           </aside>
 
           {/* ARTICLE */}
-          <article className="space-y-10">
-            {sections?.map((section, i) => {
-              const lines = section.split("\n").filter(Boolean);
-
-              const heading = lines[0].replace(/#/g, "").trim();
-
-              const body = lines.slice(1).join("\n\n");
-
-              return (
-                <div
-                  key={i}
-                  id={`section-${i}`}
-                  className={`${
-                    body.trim()
-                      ? "rounded-3xl border border-white/10 bg-white/[0.03] p-8 lg:p-10 backdrop-blur-xl"
-                      : "py-4"
-                  }`}
-                >
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="h-12 w-1 rounded-full bg-gradient-to-b from-indigo-500 to-purple-500" />
-
-                    <h2 className="text-3xl lg:text-4xl font-bold leading-tight">
-                      {heading}
-                    </h2>
-                  </div>
-
-                  <div className="prose prose-invert max-w-none prose-p:text-gray-300 prose-p:leading-8 prose-li:text-gray-300 prose-headings:text-white">
-                    <pre className="whitespace-pre-wrap font-sans text-[17px] leading-8 text-gray-300 overflow-x-auto">
-                      {body}
-                    </pre>
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* CTA */}
-            <div className="rounded-3xl border border-indigo-500/20 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 p-10 text-center">
-              <h3 className="text-4xl font-bold">
-                Practice AI Mock Interviews
-              </h3>
-
-              <p className="text-gray-300 mt-5 text-lg max-w-2xl mx-auto leading-relaxed">
-                Improve communication, React interview preparation, JavaScript
-                concepts, and frontend confidence using SpeakAI.
-              </p>
-
-              <Link
-                to="/coach"
-                className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 px-8 py-4 text-lg font-semibold mt-8 hover:scale-105 transition"
-              >
-                Start Mock Interview
-              </Link>
-            </div>
+          <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 lg:p-12 backdrop-blur-xl">
+            <div
+              className="prose prose-invert max-w-none
+    prose-headings:text-white
+    prose-p:text-gray-300
+    prose-p:leading-8
+    prose-li:text-gray-300
+    prose-strong:text-white
+    prose-a:text-indigo-400
+    prose-blockquote:border-indigo-500
+    prose-blockquote:text-gray-300
+    prose-code:text-indigo-300
+    prose-pre:bg-black/30"
+              dangerouslySetInnerHTML={{
+                __html: blog.content,
+              }}
+            />
           </article>
         </div>
       </section>
