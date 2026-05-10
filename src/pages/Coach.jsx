@@ -455,7 +455,7 @@ export default function Coach() {
                     className={`group w-full rounded-2xl border p-4 text-left transition-all duration-300 ${
                       i === qIndex
                         ? "border-primary bg-primary/10 shadow-lg shadow-primary/10"
-                        : "border-white/10 hover:bg-white/5 hover:-translate-y-1"
+                        : "border-white/10 hover:bg-white/[0.06] hover:-translate-y-1"
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-2">

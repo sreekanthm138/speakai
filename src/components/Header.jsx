@@ -109,10 +109,10 @@ export default function Header() {
               {/* Profile Trigger */}
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10 transition"
+                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/[0.08] transition"
               >
                 {/* Avatar */}
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 font-bold text-white">
+                <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-sm font-bold text-white shadow-lg shadow-indigo-500/20">
                   {userData.email?.[0]?.toUpperCase()}
                 </div>
 
@@ -122,7 +122,7 @@ export default function Header() {
                     {userData.email?.split("@")[0]}
                   </p>
 
-                  <p className="text-xs text-gray-400">AI User</p>
+                  <p className="text-xs text-gray-400">Interview Candidate</p>
                 </div>
 
                 <ChevronDown size={18} className="text-gray-400" />
@@ -130,9 +130,9 @@ export default function Header() {
 
               {/* Dropdown */}
               {profileOpen && (
-                <div className="absolute right-0 mt-4 w-72 rounded-3xl border border-white/10 bg-[#0b1020] p-3 shadow-2xl backdrop-blur z-50">
+                <div className="absolute right-0 mt-4 w-64 rounded-2xl border border-white/10 bg-[#0f172a]/95 p-3 shadow-2xl ring-1 ring-white/10 backdrop-blur z-50">
                   {/* User Info */}
-                  <div className="border-b border-white/10 p-4">
+                  <div className="border-b border-white/10 px-4 py-3">
                     <p className="font-semibold text-white">{userData.email}</p>
 
                     <p className="mt-1 text-sm text-gray-400">
@@ -144,7 +144,7 @@ export default function Header() {
                   <div className="mt-3 space-y-1">
                     <Link
                       to="/dashboard"
-                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition"
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-gray-300 hover:bg-white/[0.06] hover:text-white transition"
                     >
                       <LayoutDashboard size={18} />
                       Dashboard
@@ -152,7 +152,7 @@ export default function Header() {
 
                     <Link
                       to="/coach"
-                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition"
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-gray-300 hover:bg-white/[0.06] hover:text-white transition"
                     >
                       <User size={18} />
                       Interview Coach
@@ -160,7 +160,7 @@ export default function Header() {
 
                     <Link
                       to="/admin/blog-generator"
-                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition"
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-gray-300 hover:bg-white/[0.06] hover:text-white transition"
                     >
                       <PenSquare size={18} />
                       Blog Generator
@@ -168,7 +168,7 @@ export default function Header() {
 
                     <a
                       href="mailto:sreekanthm138@gmail.com"
-                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition"
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-gray-300 hover:bg-white/[0.06] hover:text-white transition"
                     >
                       <Mail size={18} />
                       Contact Support
@@ -179,7 +179,7 @@ export default function Header() {
                   <div className="mt-3 border-t border-white/10 pt-3">
                     <button
                       onClick={signOut}
-                      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-red-400 hover:bg-red-500/10 transition"
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-red-300 hover:bg-red-500/10 transition"
                     >
                       <LogOut size={18} />
                       Sign Out
@@ -251,7 +251,7 @@ export default function Header() {
                   <Link
                     to="/dashboard"
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-gray-300 hover:bg-white/5"
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-gray-300 hover:bg-white/[0.06]"
                   >
                     <LayoutDashboard size={18} />
                     Dashboard
@@ -260,7 +260,7 @@ export default function Header() {
                   <Link
                     to="/coach"
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-gray-300 hover:bg-white/5"
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-gray-300 hover:bg-white/[0.06]"
                   >
                     <User size={18} />
                     Interview Coach
@@ -268,7 +268,7 @@ export default function Header() {
 
                   <button
                     onClick={signOut}
-                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-red-400 hover:bg-red-500/10"
+                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-red-300 hover:bg-red-500/10"
                   >
                     <LogOut size={18} />
                     Sign Out
