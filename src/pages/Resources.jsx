@@ -17,7 +17,7 @@ const featuredResources = [
     desc: "Most asked React questions from beginner to advanced.",
     icon: <Code2 size={26} />,
     tag: "Frontend",
-    link: "/blog/react-interview-questions",
+    link: "/blog/50-react-interview-questions",
   },
 
   {
