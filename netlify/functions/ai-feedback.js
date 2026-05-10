@@ -29,13 +29,27 @@ Evaluate the candidate's spoken answer.
 Return STRICT JSON with:
 {
   "score": number,
+
   "summary": string,
+
   "strengths": [],
+
   "improvements": [],
+  "followUpQuestion": string,
+
+  "scores": {
+    "confidence": number,
+    "clarity": number,
+    "technical": number,
+    "communication": number,
+    "star": number
+  },
+
   "star": {
     "hasSTAR": boolean,
     "missing": []
   },
+
   "speaking": {
     "wpm": number,
     "fillerHits": [],
@@ -56,6 +70,16 @@ Evaluation Rules:
 - Check confidence and structure
 - Mention missing concepts if answer is incomplete
 - Keep improvements actionable
+
+Generate a smart follow-up interview question based on:
+- weak areas in the answer
+- missing technical depth
+- incomplete explanations
+- behavioral clarity
+- communication gaps
+
+The follow-up question should feel like a real interviewer continuing the interview.
+
 `.trim();
 
     // Try primary -> fallback with small retries

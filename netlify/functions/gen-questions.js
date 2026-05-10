@@ -31,6 +31,8 @@ Generate ${count} ${type} interview questions.
 Role: ${role}
 Skill: ${skill}
 Difficulty: ${difficulty}
+Resume:
+${resumeText || "No resume provided"}
 
 Requirements:
 - Ask only relevant ${skill} questions
@@ -38,6 +40,14 @@ Requirements:
 - Concise and interview-ready
 - Output strict JSON:
 {"questions":["Q1","Q2"]}
+
+If resume content is provided:
+- generate personalized questions
+- ask about projects
+- ask about technologies mentioned
+- ask scenario-based follow-up questions
+- ask experience-specific questions
+
 `.trim();
 
     const models = [PRIMARY_MODEL, FALLBACK_MODEL];

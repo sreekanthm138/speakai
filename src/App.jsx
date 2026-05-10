@@ -22,6 +22,7 @@ import Signup from "./auth/Signup";
 import AuthCallback from "./auth/AuthCallback";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
 import Chat from "./pages/Chat.jsx";
+import AdminBlogGenerator from "./pages/AdminBlogGenerator";
 
 export default function App() {
   return (
@@ -33,6 +34,10 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<Post />} />
+            <Route
+              path="/admin/blog-generator"
+              element={<AdminBlogGenerator />}
+            />
             <Route path="/free-prompts" element={<FreePrompts />} />
             <Route path="/thank-you" element={<ThankYou />} />
             <Route path="/about" element={<About />} />
@@ -72,7 +77,7 @@ export default function App() {
         </div>
         <Footer />
         <a
-          className="fixed right-4 bottom-4 bg-green-500 text-black font-semibold px-4 py-2 rounded-full shadow-soft"
+          className="fixed right-4 bottom-4 bg-indigo-500 text-black font-semibold px-4 py-2 rounded-full shadow-soft"
           href="https://wa.me/919110733750"
           target="_blank"
           rel="noreferrer"

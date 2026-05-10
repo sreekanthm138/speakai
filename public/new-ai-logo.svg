@@ -1,0 +1,24 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="32" y1="32" x2="224" y2="224" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+
+    <linearGradient id="textGradient" x1="64" y1="64" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E0E7FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect x="24" y="24" width="208" height="208" rx="56" fill="url(#bgGradient)"/>
+
+  <!-- Glow Circle -->
+  <circle cx="128" cy="128" r="72" fill="white" fill-opacity="0.06"/>
+
+  <!-- AI Text -->
+  <path d="M93.2 168L123.8 88H136.8L167.4 168H152.6L145.8 148.8H114.4L107.4 168H93.2ZM118.6 137.6H141.8L130.2 104.8L118.6 137.6Z" fill="url(#textGradient)"/>
+
+  <path d="M177.4 88H191.2V168H177.4V88Z" fill="url(#textGradient)"/>
+</svg>

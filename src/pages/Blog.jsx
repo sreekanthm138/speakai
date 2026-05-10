@@ -28,18 +28,44 @@ export default function Blog() {
           {blogs.map((blog) => (
             <article
               key={blog.slug}
-              className="card hover:scale-[1.02] transition"
+              className="group overflow-hidden rounded-3xl border bg-card/50 backdrop-blur transition hover:-translate-y-1 hover:shadow-2xl"
             >
-              <h2 className="text-2xl font-bold">{blog.title}</h2>
+              {/* Image */}
+              <div className="aspect-[16/9] overflow-hidden">
+                <img
+                  src={blog.image}
+                  alt={blog.title}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+              </div>
 
-              <p className="text-muted mt-3">{blog.description}</p>
+              {/* Content */}
+              <div className="p-6">
+                {/* Meta */}
+                <div className="flex items-center gap-3 text-sm text-muted mb-3">
+                  <span>{blog.category}</span>
+                  <span>•</span>
+                  <span>{blog.readTime}</span>
+                </div>
 
-              <Link
-                to={`/blog/${blog.slug}`}
-                className="btn btn-primary mt-5 inline-flex"
-              >
-                Read Article
-              </Link>
+                {/* Title */}
+                <h2 className="text-2xl font-bold leading-tight">
+                  {blog.title}
+                </h2>
+
+                {/* Description */}
+                <p className="text-muted mt-4 line-clamp-3">
+                  {blog.description}
+                </p>
+
+                {/* Button */}
+                <Link
+                  to={`/blog/${blog.slug}`}
+                  className="btn btn-primary mt-6 inline-flex"
+                >
+                  Read Article
+                </Link>
+              </div>
             </article>
           ))}
         </div>

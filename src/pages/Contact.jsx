@@ -121,8 +121,8 @@ export default function Contact() {
             </p>
 
             {submitted ? (
-              <div className="mt-6 rounded-xl border border-green-500/30 bg-green-500/10 p-4">
-                <h3 className="font-semibold text-green-400">
+              <div className="mt-6 rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4">
+                <h3 className="font-semibold text-indigo-400">
                   Message sent successfully ✅
                 </h3>
                 <p className="text-sm text-muted mt-1">

@@ -28,7 +28,7 @@ body {
   @apply max-w-7xl mx-auto px-5;
 }
 .section {
-  @apply py-16;
+  @apply py-20;
 }
 .h1 {
   @apply text-4xl sm:text-5xl font-extrabold leading-tight tracking-tight;
@@ -48,7 +48,13 @@ body {
   transform: translateY(-1px);
 }
 .btn-primary {
-  @apply bg-brand text-black font-semibold border-none shadow-[0_8px_30px_rgba(34,197,94,0.35)];
+  @apply inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium transition-all duration-300;
+  background: linear-gradient(135deg, rgb(99 102 241), rgb(168 85 247));
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.35);
 }
 .btn-ghost {
   @apply text-text;
@@ -56,15 +62,20 @@ body {
 
 /* Cards */
 .card {
-  @apply bg-card/70 border border-border rounded-2xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-sm;
-}
-.card-hover {
-  @apply transition hover:shadow-[0_10px_40px_rgba(0,0,0,0.35)] hover:-translate-y-0.5;
+  @apply rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-6 shadow-xl transition-all duration-300;
 }
 
+.card:hover {
+  transform: translateY(-4px);
+}
 /* Inputs */
 .input {
-  @apply bg-surface/80 border border-border rounded-xl px-3 py-2 w-full text-text placeholder:text-muted;
+  @apply w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none transition-all duration-300;
+}
+
+.input:focus {
+  border-color: rgb(99 102 241);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
 /* Header */
@@ -92,4 +103,47 @@ body {
 }
 .prose h3 {
   @apply text-xl font-semibold mt-4 mb-2;
+}
+body {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(99, 102, 241, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(168, 85, 247, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(circle at bottom, rgba(59, 130, 246, 0.08), transparent 35%);
+}
+html {
+  scroll-behavior: smooth;
+}
+body::before {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(99, 102, 241, 0.18),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 80% 0%,
+      rgba(168, 85, 247, 0.18),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(59, 130, 246, 0.12),
+      transparent 30%
+    );
+
+  z-index: -1;
+  pointer-events: none;
 }
