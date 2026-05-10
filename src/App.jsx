@@ -23,6 +23,7 @@ import AuthCallback from "./auth/AuthCallback";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
 import Chat from "./pages/Chat.jsx";
 import AdminBlogGenerator from "./pages/AdminBlogGenerator";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
@@ -62,7 +63,14 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
-
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/chat"
               element={

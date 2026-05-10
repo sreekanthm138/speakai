@@ -3,6 +3,7 @@ import MicButton from "../components/MicButton.jsx";
 import { wordsPerMinute, fillerCounts, starGuess } from "../util/metrics.js";
 import { Helmet } from "react-helmet-async";
 import ProgressDashboard from "../components/ProgressDashboard";
+import { supabase } from "../auth/supabaseClient.js";
 
 const ROLE_SKILLS = {
   "Software Engineer": [
@@ -228,21 +229,44 @@ export default function Coach() {
       setLoading(false);
     }
   };
-  const saveSession = () => {
-    const newSession = {
-      role,
-      skill,
-      date: new Date().toISOString(),
-      metrics,
-      feedback,
-      transcript,
-    };
+  const saveSession = async () => {
+    if (!feedback) return;
 
-    const updated = [...savedSessions, newSession];
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    setSavedSessions(updated);
+      if (!user) return;
 
-    localStorage.setItem("speakai-sessions", JSON.stringify(updated));
+      const { error } = await supabase.from("user_sessions").insert([
+        {
+          user_id: user.id,
+
+          role,
+
+          skill,
+
+          question: currentQuestion,
+
+          transcript,
+
+          feedback,
+
+          metrics,
+        },
+      ]);
+
+      if (error) {
+        console.error(error);
+        alert("Failed to save session");
+        return;
+      }
+
+      alert("Session saved!");
+    } catch (e) {
+      console.error(e);
+    }
   };
   useEffect(() => {
     const stored = localStorage.getItem("speakai-sessions");
@@ -844,6 +868,9 @@ export default function Coach() {
                 )}
               </div>
             </div>
+            <button className="btn btn-primary mt-6" onClick={saveSession}>
+              Save Session
+            </button>
             {/* Follow-up Question */}
             {followUpQuestion && (
               <div className="card border-primary/20 bg-primary/5">
