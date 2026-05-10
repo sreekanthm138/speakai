@@ -37,6 +37,25 @@ export default function AdminBlogGenerator() {
     }
   };
 
+  const getCoverImage = (category) => {
+    const covers = {
+      "Frontend Development":
+        "https://images.unsplash.com/photo-1515879218367-8466d910aaa4",
+
+      "Career Development":
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+
+      AI: "https://images.unsplash.com/photo-1677442136019-21780ecad995",
+
+      JavaScript: "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+    };
+
+    return (
+      covers[category] ||
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
+    );
+  };
+
   const saveBlog = async () => {
     if (!generated) return;
 
@@ -48,7 +67,7 @@ export default function AdminBlogGenerator() {
         category: generated.category,
         keywords: generated.keywords,
         content: generated.content,
-        image: generated.image,
+        cover_image: getCoverImage(generated.category),
       },
     ]);
 
