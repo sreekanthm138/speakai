@@ -810,6 +810,82 @@ export default function Coach() {
                     </ul>
                   </div>
                 )}
+                {/* Improvement Roadmap */}
+                <div className="mt-8 rounded-3xl border border-indigo-500/20 bg-indigo-500/5 p-6">
+                  <p className="text-sm text-indigo-300 mb-2">
+                    Improvement Roadmap
+                  </p>
+
+                  <h3 className="text-3xl font-bold mb-6">Your Next Steps</h3>
+
+                  <div className="space-y-5">
+                    {finalReport.improvements?.map((item, i) => (
+                      <div key={i} className="flex items-start gap-4">
+                        <div className="h-8 w-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-sm font-bold text-indigo-300 shrink-0">
+                          {i + 1}
+                        </div>
+
+                        <div>
+                          <p className="text-white leading-7">{item}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Practice Again CTA */}
+                <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
+                  <p className="text-sm text-indigo-300">Continue Improving</p>
+
+                  <h3 className="text-4xl font-bold mt-3">
+                    Practice Another Interview
+                  </h3>
+
+                  <p className="text-muted mt-4 max-w-2xl mx-auto">
+                    Build confidence with more AI-powered interview simulations
+                    tailored to your target role.
+                  </p>
+
+                  <div className="flex flex-wrap justify-center gap-4 mt-8">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => {
+                        setSkill("React");
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      React Interview
+                    </button>
+
+                    <button
+                      className="btn border"
+                      onClick={() => {
+                        setSkill("JavaScript");
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      JavaScript
+                    </button>
+
+                    <button
+                      className="btn border"
+                      onClick={() => {
+                        setQType("Behavioral");
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      Behavioral
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
             {feedbackLoading && (
@@ -1134,7 +1210,7 @@ export default function Coach() {
                 </div>
               </div>
             )}
-            <ProgressDashboard sessions={completedAnswers} />
+            {/* <ProgressDashboard sessions={completedAnswers} /> */}
             {/* SAVED SESSIONS */}
             {/* <div className="card">
               <div className="flex items-center justify-between mb-5">
