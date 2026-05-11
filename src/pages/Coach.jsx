@@ -91,13 +91,16 @@ export default function Coach() {
   const [seconds, setSeconds] = useState(0);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState(null);
-  const [savedSessions, setSavedSessions] = useState([]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   // Countdown
   const [useCountdown, setUseCountdown] = useState(true);
   const [limit, setLimit] = useState(90); // 60/90/120
   // Follow-up
   const [followUpQuestion, setFollowUpQuestion] = useState("");
   const [resumeText, setResumeText] = useState("");
+  const [completedAnswers, setCompletedAnswers] = useState([]);
+  const [finalReport, setFinalReport] = useState(null);
+  const [finalLoading, setFinalLoading] = useState(false);
   // Refs
   const micRef = useRef(null);
   const timer = useRef(null);
@@ -222,6 +225,19 @@ export default function Coach() {
       setFeedback(data);
 
       setFollowUpQuestion(data.followUpQuestion || "");
+      setCompletedAnswers((prev) => {
+        const filtered = prev.filter((a) => a.question !== currentQuestion);
+
+        return [
+          ...filtered,
+          {
+            question: currentQuestion,
+            transcript,
+            feedback: data,
+            metrics,
+          },
+        ];
+      });
     } catch (e) {
       console.error(e);
       alert("AI feedback failed. Try again.");
@@ -229,52 +245,79 @@ export default function Coach() {
       setLoading(false);
     }
   };
-  const saveSession = async () => {
-    if (!feedback) return;
+
+  const generateFinalReport = async () => {
+    if (!completedAnswers.length) return;
+
+    setFinalLoading(true);
 
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const r = await fetch("/.netlify/functions/final-report", {
+        method: "POST",
 
-      if (!user) return;
-
-      const { error } = await supabase.from("user_sessions").insert([
-        {
-          user_id: user.id,
-
-          role,
-
-          skill,
-
-          question: currentQuestion,
-
-          transcript,
-
-          feedback,
-
-          metrics,
+        headers: {
+          "Content-Type": "application/json",
         },
-      ]);
 
-      if (error) {
-        console.error(error);
-        alert("Failed to save session");
-        return;
-      }
+        body: JSON.stringify({
+          role,
+          skill,
+          qType,
+          answers: completedAnswers,
+        }),
+      });
 
-      alert("Session saved!");
+      const data = await r.json();
+
+      setFinalReport(data);
     } catch (e) {
       console.error(e);
+      alert("Failed to generate report");
+    } finally {
+      setFinalLoading(false);
     }
   };
-  useEffect(() => {
-    const stored = localStorage.getItem("speakai-sessions");
 
-    if (stored) {
-      setSavedSessions(JSON.parse(stored));
-    }
-  }, []);
+  // const saveSession = async () => {
+  //   if (!feedback) return;
+
+  //   try {
+  //     const {
+  //       data: { user },
+  //     } = await supabase.auth.getUser();
+
+  //     if (!user) return;
+
+  //     const { error } = await supabase.from("user_sessions").insert([
+  //       {
+  //         user_id: user.id,
+
+  //         role,
+
+  //         skill,
+
+  //         question: currentQuestion,
+
+  //         transcript,
+
+  //         feedback,
+
+  //         metrics,
+  //       },
+  //     ]);
+
+  //     if (error) {
+  //       console.error(error);
+  //       alert("Failed to save session");
+  //       return;
+  //     }
+
+  //     alert("Session saved!");
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
+
   /* --------------------------------- Metrics --------------------------------- */
   const metrics = useMemo(
     () => ({
@@ -506,14 +549,24 @@ export default function Coach() {
                       {difficulty}
                     </div>
                   </div>
-
+                  <div className="flex gap-2 mt-5">
+                    {Array.from({ length: qList.length || 1 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className={`h-2 flex-1 rounded-full transition-all duration-500 ${
+                          i <= qIndex ? "bg-indigo-500" : "bg-white/10"
+                        }`}
+                      />
+                    ))}
+                  </div>
                   <h2 className="text-2xl lg:text-3xl font-bold leading-snug mt-5 max-w-5xl">
                     {currentQuestion || "Select a question"}
                   </h2>
                 </div>
 
-                <div className="rounded-2xl bg-primary/10 px-4 py-2 text-sm whitespace-nowrap">
-                  AI Interview
+                <div className="flex items-center gap-2 rounded-full border border-indigo-500/20 bg-indigo-500/10 px-4 py-2 text-sm text-indigo-300 whitespace-nowrap">
+                  <div className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse" />
+                  Senior AI Interviewer
                 </div>
               </div>
             </div>
@@ -597,7 +650,21 @@ export default function Coach() {
                 {status === "recording" && (
                   <button
                     className="rounded-2xl border border-red-500/20 bg-red-500/10 px-6 py-3 font-semibold text-red-300 hover:bg-red-500/20 transition"
-                    onClick={() => micRef.current?.stop?.()}
+                    onClick={async () => {
+                      micRef.current?.stop?.();
+
+                      setTimeout(async () => {
+                        if (transcript.trim()) {
+                          setIsAnalyzing(true);
+
+                          try {
+                            await askAI();
+                          } finally {
+                            setIsAnalyzing(false);
+                          }
+                        }
+                      }, 1200);
+                    }}
                   >
                     Stop Recording
                   </button>
@@ -609,16 +676,6 @@ export default function Coach() {
                 >
                   Reset
                 </button>
-
-                <button
-                  className="rounded-2xl border border-indigo-500/20 bg-indigo-500/10 px-6 py-3 font-semibold text-indigo-300 hover:bg-indigo-500/20 transition"
-                  onClick={askAI}
-                  disabled={
-                    loading || !transcript.trim() || status === "recording"
-                  }
-                >
-                  {loading ? "Analyzing..." : "Get AI Feedback"}
-                </button>
               </div>
             </div>
 
@@ -626,13 +683,32 @@ export default function Coach() {
             <div className="card">
               <h3 className="text-2xl font-bold">Transcript</h3>
 
-              <textarea
-                className="input mt-5 min-h-[260px]"
-                rows="10"
-                value={transcript}
-                onChange={(e) => setTranscript(e.target.value)}
-                placeholder="Your spoken answer will appear here..."
-              />
+              <div className="mt-5 rounded-3xl border border-white/10 bg-white/[0.03] p-6 min-h-[260px]">
+                <div className="flex items-center gap-3 mb-5">
+                  <div
+                    className={`h-3 w-3 rounded-full ${
+                      status === "recording"
+                        ? "bg-red-500 animate-pulse"
+                        : "bg-indigo-400"
+                    }`}
+                  />
+
+                  <span className="text-sm text-muted">
+                    {status === "recording"
+                      ? "Listening..."
+                      : "Transcript Ready"}
+                  </span>
+                </div>
+
+                <p className="leading-8 text-gray-200 whitespace-pre-wrap">
+                  {transcript ||
+                    "Start speaking to see your live transcript..."}
+
+                  {status === "recording" && (
+                    <span className="animate-pulse text-indigo-400">|</span>
+                  )}
+                </p>
+              </div>
 
               {interim && (
                 <p className="text-sm italic mt-3 text-muted">
@@ -741,7 +817,24 @@ export default function Coach() {
                 </p>
               </div>
             </div>
+            {isAnalyzing && (
+              <div className="card animate-pulse">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="h-3 w-3 rounded-full bg-indigo-400 animate-ping" />
 
+                  <h3 className="text-xl font-bold">
+                    AI is analyzing your interview...
+                  </h3>
+                </div>
+
+                <div className="space-y-3 text-muted">
+                  <p>✓ Communication Analysis</p>
+                  <p>✓ Technical Evaluation</p>
+                  <p>✓ Confidence Detection</p>
+                  <p>✓ STAR Method Review</p>
+                </div>
+              </div>
+            )}
             {/* AI FEEDBACK */}
             <div className="card">
               <div className="flex items-center justify-between">
@@ -876,9 +969,10 @@ export default function Coach() {
                       </h4>
 
                       <p className="text-muted leading-relaxed">
-                        Practice shorter and more structured answers. Focus on
+                        {feedback.recommendation}
+                        {/* Practice shorter and more structured answers. Focus on
                         reducing filler words and improving STAR method
-                        storytelling.
+                        storytelling. */}
                       </p>
                     </div>
                   </div>
@@ -889,9 +983,7 @@ export default function Coach() {
                 )}
               </div>
             </div>
-            <button className="btn btn-primary mt-6" onClick={saveSession}>
-              Save Session
-            </button>
+
             {/* Follow-up Question */}
             {followUpQuestion && (
               <div className="card border-primary/20 bg-primary/5">
@@ -917,7 +1009,7 @@ export default function Coach() {
                     setQList(updated);
 
                     setQIndex(updated.length - 1);
-
+                    setSeconds(0);
                     setFollowUpQuestion("");
 
                     setTranscript("");
@@ -932,13 +1024,116 @@ export default function Coach() {
                     });
                   }}
                 >
-                  Continue Interview
+                  Next AI Question
                 </button>
               </div>
             )}
-            <ProgressDashboard sessions={savedSessions} />
+            {qIndex === qList.length - 1 && feedback && (
+              <div className="card border-indigo-500/20 bg-indigo-500/5">
+                <div className="flex items-start justify-between gap-6 flex-wrap">
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="h-12 w-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-2xl">
+                        🎉
+                      </div>
+
+                      <div>
+                        <h3 className="text-3xl font-bold">
+                          Mock Interview Completed
+                        </h3>
+
+                        <p className="text-muted mt-1">
+                          Your AI interview summary is ready.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 text-muted">
+                      <p>
+                        ✓ {qList.length}/{qList.length} Questions Completed
+                      </p>
+
+                      <p>✓ {qType} Interview Round</p>
+
+                      <p>✓ {skill} Assessment</p>
+                    </div>
+                  </div>
+
+                  <button
+                    className="btn btn-primary h-fit"
+                    onClick={generateFinalReport}
+                    disabled={finalLoading}
+                  >
+                    {finalLoading
+                      ? "Generating AI Report..."
+                      : "Generate Final Report"}
+                  </button>
+                </div>
+              </div>
+            )}
+            {finalReport && (
+              <div className="card border-indigo-500/20 bg-indigo-500/5">
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                  <div>
+                    <p className="text-sm text-indigo-300">
+                      AI Interview Summary
+                    </p>
+
+                    <h2 className="text-4xl font-bold mt-2">
+                      {finalReport.overallScore}/10
+                    </h2>
+                  </div>
+
+                  <div className="rounded-3xl bg-indigo-500/10 px-6 py-4">
+                    <p className="text-sm text-muted">Hiring Recommendation</p>
+
+                    <p className="text-xl font-bold mt-1">
+                      {finalReport.recommendation}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Summary */}
+                <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6">
+                  <h3 className="text-xl font-bold mb-4">Final Summary</h3>
+
+                  <p className="text-muted leading-8">{finalReport.summary}</p>
+                </div>
+
+                {/* Strengths */}
+                {!!finalReport.strengths?.length && (
+                  <div className="mt-6 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-6">
+                    <h3 className="text-xl font-bold mb-4 text-indigo-300">
+                      Strengths
+                    </h3>
+
+                    <ul className="space-y-3 text-muted">
+                      {finalReport.strengths.map((s, i) => (
+                        <li key={i}>✓ {s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Improvements */}
+                {!!finalReport.improvements?.length && (
+                  <div className="mt-6 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-6">
+                    <h3 className="text-xl font-bold mb-4 text-yellow-300">
+                      Improvements
+                    </h3>
+
+                    <ul className="space-y-3 text-muted">
+                      {finalReport.improvements.map((s, i) => (
+                        <li key={i}>• {s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+            <ProgressDashboard sessions={completedAnswers} />
             {/* SAVED SESSIONS */}
-            <div className="card">
+            {/* <div className="card">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-2xl font-bold">Saved Sessions</h3>
 
@@ -948,7 +1143,7 @@ export default function Coach() {
               </div>
 
               <SavedSessions />
-            </div>
+            </div> */}
           </section>
         </div>
       </main>
@@ -958,40 +1153,40 @@ export default function Coach() {
 
 /* ------------------------------- Subcomponents ------------------------------- */
 
-function SavedSessions() {
-  const [items, setItems] = useState(() =>
-    JSON.parse(localStorage.getItem("speakai_sessions") || "[]"),
-  );
-  const clear = () => {
-    localStorage.removeItem("speakai_sessions");
-    setItems([]);
-  };
-  if (!items.length)
-    return <p className="text-muted">No saved sessions yet.</p>;
-  return (
-    <>
-      <button className="btn border mb-3" onClick={clear}>
-        Clear all
-      </button>
-      <div className="grid md:grid-cols-2 gap-3">
-        {items.map((s, idx) => (
-          <div className="card" key={idx}>
-            <div className="text-sm text-muted">
-              {new Date(s.ts).toLocaleString()}
-            </div>
-            <div className="font-semibold">{s.role}</div>
-            <div className="text-sm">{s.question}</div>
-            <div className="text-sm text-muted mt-1">
-              WPM {s.metrics?.wpm} • Fillers {s.metrics?.fillers?.total} • STAR{" "}
-              {s.metrics?.star?.hasSTAR ? "✅" : "⚠️"}
-            </div>
-            <details className="mt-2">
-              <summary className="cursor-pointer">Transcript</summary>
-              <p className="text-sm mt-1">{s.transcript}</p>
-            </details>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
+// function SavedSessions() {
+//   const [items, setItems] = useState(() =>
+//     JSON.parse(localStorage.getItem("speakai_sessions") || "[]"),
+//   );
+//   const clear = () => {
+//     localStorage.removeItem("speakai_sessions");
+//     setItems([]);
+//   };
+//   if (!items.length)
+//     return <p className="text-muted">No saved sessions yet.</p>;
+//   return (
+//     <>
+//       <button className="btn border mb-3" onClick={clear}>
+//         Clear all
+//       </button>
+//       <div className="grid md:grid-cols-2 gap-3">
+//         {items.map((s, idx) => (
+//           <div className="card" key={idx}>
+//             <div className="text-sm text-muted">
+//               {new Date(s.ts).toLocaleString()}
+//             </div>
+//             <div className="font-semibold">{s.role}</div>
+//             <div className="text-sm">{s.question}</div>
+//             <div className="text-sm text-muted mt-1">
+//               WPM {s.metrics?.wpm} • Fillers {s.metrics?.fillers?.total} • STAR{" "}
+//               {s.metrics?.star?.hasSTAR ? "✅" : "⚠️"}
+//             </div>
+//             <details className="mt-2">
+//               <summary className="cursor-pointer">Transcript</summary>
+//               <p className="text-sm mt-1">{s.transcript}</p>
+//             </details>
+//           </div>
+//         ))}
+//       </div>
+//     </>
+//   );
+// }
