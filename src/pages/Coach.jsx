@@ -150,6 +150,22 @@ export default function Coach() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role, qType, difficulty, count]);
 
+  useEffect(() => {
+    if (status === "idle" && transcript.trim() && !feedback && !loading) {
+      const runAI = async () => {
+        setIsAnalyzing(true);
+
+        try {
+          await askAI();
+        } finally {
+          setIsAnalyzing(false);
+        }
+      };
+
+      runAI();
+    }
+  }, [status]);
+  
   const generate = async () => {
     if (!controlsDirty) return; // nothing to do
     try {
@@ -650,20 +666,8 @@ export default function Coach() {
                 {status === "recording" && (
                   <button
                     className="rounded-2xl border border-red-500/20 bg-red-500/10 px-6 py-3 font-semibold text-red-300 hover:bg-red-500/20 transition"
-                    onClick={async () => {
+                    onClick={() => {
                       micRef.current?.stop?.();
-
-                      setTimeout(async () => {
-                        if (transcript.trim()) {
-                          setIsAnalyzing(true);
-
-                          try {
-                            await askAI();
-                          } finally {
-                            setIsAnalyzing(false);
-                          }
-                        }
-                      }, 1200);
                     }}
                   >
                     Stop Recording
