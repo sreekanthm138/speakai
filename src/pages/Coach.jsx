@@ -101,8 +101,7 @@ export default function Coach() {
   const [completedAnswers, setCompletedAnswers] = useState([]);
   const [finalReport, setFinalReport] = useState(null);
   const [finalLoading, setFinalLoading] = useState(false);
-  const [nextCountdown, setNextCountdown] = useState(null);
-  const [autoMoving, setAutoMoving] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   // Refs
   const micRef = useRef(null);
   const timer = useRef(null);
@@ -243,37 +242,7 @@ export default function Coach() {
       setFeedback(data);
 
       setFollowUpQuestion(data.followUpQuestion || "");
-
-      if (!data.error) {
-        setCompletedAnswers((prev) => {
-          const filtered = prev.filter((a) => a.question !== currentQuestion);
-
-          return [
-            ...filtered,
-            {
-              question: currentQuestion,
-              transcript,
-              feedback: data,
-              metrics,
-            },
-          ];
-        });
-      }
-      const isLastQuestion = qIndex === qList.length - 1;
-
-      if (!isLastQuestion) {
-        setAutoMoving(true);
-        let counter = 4;
-        setNextCountdown(counter);
-        const interval = setInterval(() => {
-          counter--;
-          setNextCountdown(counter);
-          if (counter <= 0) {
-            clearInterval(interval);
-            moveToNextQuestion();
-          }
-        }, 1000);
-      }
+      setShowFeedbackModal(true);
     } catch (e) {
       console.error(e);
       alert("AI feedback failed. Try again.");
@@ -781,381 +750,6 @@ export default function Coach() {
               )}
             </div>
 
-            {/* METRICS */}
-            {/* METRICS */}
-            <div className="grid md:grid-cols-3 gap-4">
-              {/* WPM */}
-              <div className="card relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1 bg-indigo-500" />
-
-                <p className="text-sm text-muted">Words Per Minute</p>
-
-                <div className="flex items-end justify-between mt-4">
-                  <h3 className="text-5xl font-bold">{metrics.wpm}</h3>
-
-                  <div className="h-14 w-14 rounded-full border-4 border-indigo-500 flex items-center justify-center text-sm">
-                    WPM
-                  </div>
-                </div>
-
-                <div className="mt-5 h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className="h-full bg-indigo-500"
-                    style={{
-                      width: `${(Math.min(metrics.wpm, 160) / 160) * 100}%`,
-                    }}
-                  />
-                </div>
-
-                <p className="text-sm text-muted mt-3">Ideal range: 120–160</p>
-              </div>
-
-              {/* Fillers */}
-              <div className="card relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1 bg-red-500" />
-
-                <p className="text-sm text-muted">Filler Words</p>
-
-                <div className="flex items-end justify-between mt-4">
-                  <h3 className="text-5xl font-bold">
-                    {metrics.fillers.total}
-                  </h3>
-
-                  <div className="h-14 w-14 rounded-full border-4 border-red-500 flex items-center justify-center text-sm">
-                    Uh
-                  </div>
-                </div>
-
-                <div className="mt-5 h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className="h-full bg-red-500"
-                    style={{
-                      width: `${Math.min(metrics.fillers.total, 10) * 10}%`,
-                    }}
-                  />
-                </div>
-
-                <p className="text-sm text-muted mt-3">
-                  {metrics.fillers.hits.length
-                    ? metrics.fillers.hits
-                        .map((h) => `${h.filler}×${h.count}`)
-                        .join(" · ")
-                    : "Excellent clarity"}
-                </p>
-              </div>
-
-              {/* STAR */}
-              <div className="card relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1 bg-indigo-500" />
-
-                <p className="text-sm text-muted">STAR Structure</p>
-
-                <div className="flex items-end justify-between mt-4">
-                  <h3 className="text-3xl font-bold">
-                    {metrics.star.hasSTAR ? "Strong" : "Weak"}
-                  </h3>
-
-                  <div
-                    className={`h-14 w-14 rounded-full border-4 flex items-center justify-center text-sm ${
-                      metrics.star.hasSTAR
-                        ? "border-indigo-500"
-                        : "border-yellow-500"
-                    }`}
-                  >
-                    STAR
-                  </div>
-                </div>
-
-                <div className="mt-5 h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className={`h-full ${
-                      metrics.star.hasSTAR
-                        ? "bg-indigo-500 w-full"
-                        : "bg-yellow-500 w-1/2"
-                    }`}
-                  />
-                </div>
-
-                <p className="text-sm text-muted mt-3">
-                  Situation · Task · Action · Result
-                </p>
-              </div>
-            </div>
-            {isAnalyzing && (
-              <div className="card animate-pulse">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="h-3 w-3 rounded-full bg-indigo-400 animate-ping" />
-
-                  <h3 className="text-xl font-bold">
-                    AI is analyzing your interview...
-                  </h3>
-                </div>
-
-                <div className="space-y-3 text-muted">
-                  <p>✓ Communication Analysis</p>
-                  <p>✓ Technical Evaluation</p>
-                  <p>✓ Confidence Detection</p>
-                  <p>✓ STAR Method Review</p>
-                </div>
-              </div>
-            )}
-            {/* AI FEEDBACK */}
-            <div className="card">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold">AI Feedback</h3>
-
-                {feedback?.score && (
-                  <div className="flex items-center gap-3">
-                    <div className="relative h-14 w-14 rounded-full border-4 border-primary flex items-center justify-center font-bold">
-                      {feedback.score}
-                    </div>
-
-                    <div>
-                      <p className="text-sm text-muted">Overall Score</p>
-
-                      <p className="font-semibold">AI Analysis</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-6 rounded-2xl border border-white/10 p-5 min-h-[220px]">
-                {loading ? (
-                  <div className="space-y-3 animate-pulse">
-                    <div className="h-4 rounded bg-white/10" />
-                    <div className="h-4 rounded bg-white/10 w-5/6" />
-                    <div className="h-4 rounded bg-white/10 w-4/6" />
-                  </div>
-                ) : feedback ? (
-                  <div className="space-y-5">
-                    {/* Summary */}
-                    {/* Score Breakdown */}
-                    {feedback.scores && (
-                      <div className="grid md:grid-cols-2 gap-4">
-                        {[
-                          {
-                            label: "Confidence",
-                            value: feedback.scores.confidence,
-                            color: "bg-indigo-500",
-                          },
-
-                          {
-                            label: "Clarity",
-                            value: feedback.scores.clarity,
-                            color: "bg-blue-500",
-                          },
-
-                          {
-                            label: "Technical Depth",
-                            value: feedback.scores.technical,
-                            color: "bg-purple-500",
-                          },
-
-                          {
-                            label: "Communication",
-                            value: feedback.scores.communication,
-                            color: "bg-indigo-500",
-                          },
-
-                          {
-                            label: "STAR Structure",
-                            value: feedback.scores.star,
-                            color: "bg-yellow-500",
-                          },
-                        ].map((item) => (
-                          <div
-                            key={item.label}
-                            className="rounded-2xl border border-white/10 bg-white/5 p-5"
-                          >
-                            <div className="flex items-center justify-between mb-3">
-                              <h4 className="font-semibold">{item.label}</h4>
-
-                              <span className="text-sm text-muted">
-                                {item.value}/10
-                              </span>
-                            </div>
-
-                            {/* Progress */}
-                            <div className="h-3 rounded-full bg-white/10 overflow-hidden">
-                              <div
-                                className={`h-full ${item.color} transition-all duration-700`}
-                                style={{
-                                  width: `${item.value * 10}%`,
-                                }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    {feedback.summary && (
-                      <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                        <h4 className="font-semibold mb-3 text-lg">Summary</h4>
-
-                        <p className="text-muted leading-relaxed">
-                          {feedback.summary}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Strengths */}
-                    {!!feedback.strengths?.length && (
-                      <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
-                        <h4 className="font-semibold mb-3 text-lg text-indigo-400">
-                          Strengths
-                        </h4>
-
-                        <ul className="list-disc pl-5 text-muted space-y-2">
-                          {feedback.strengths.map((s, i) => (
-                            <li key={i}>{s}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Improvements */}
-                    {!!feedback.improvements?.length && (
-                      <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-5">
-                        <h4 className="font-semibold mb-3 text-lg text-yellow-400">
-                          Improvements
-                        </h4>
-
-                        <ul className="list-disc pl-5 text-muted space-y-2">
-                          {feedback.improvements.map((s, i) => (
-                            <li key={i}>{s}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6">
-                      <h4 className="text-xl font-bold mb-3">
-                        AI Recommendation
-                      </h4>
-
-                      <p className="text-muted leading-relaxed">
-                        {feedback.recommendation}
-                        {/* Practice shorter and more structured answers. Focus on
-                        reducing filler words and improving STAR method
-                        storytelling. */}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-muted">
-                    AI feedback will appear here after analysis.
-                  </p>
-                )}
-              </div>
-            </div>
-            {autoMoving && (
-              <div className="card border-indigo-500/20 bg-indigo-500/5">
-                <div className="flex items-center justify-between gap-4 flex-wrap">
-                  <div>
-                    <p className="text-sm text-indigo-300">AI Interview Flow</p>
-
-                    <h3 className="text-2xl font-bold mt-2">
-                      Next Question in {nextCountdown}s...
-                    </h3>
-
-                    <p className="text-muted mt-2">
-                      Preparing your next interview question.
-                    </p>
-                  </div>
-
-                  <button className="btn border" onClick={moveToNextQuestion}>
-                    Skip Now →
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Follow-up Question */}
-            {followUpQuestion && (
-              <div className="card border-primary/20 bg-primary/5">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm text-muted">AI Follow-up Question</p>
-
-                    <h3 className="text-2xl font-bold mt-3 leading-relaxed">
-                      {followUpQuestion}
-                    </h3>
-                  </div>
-
-                  <div className="rounded-2xl bg-primary/10 px-4 py-2 text-sm whitespace-nowrap">
-                    Adaptive AI
-                  </div>
-                </div>
-
-                <button
-                  className="btn btn-primary mt-6"
-                  onClick={() => {
-                    const updated = [...qList, followUpQuestion];
-
-                    setQList(updated);
-
-                    setQIndex(updated.length - 1);
-                    setSeconds(0);
-                    setFollowUpQuestion("");
-
-                    setTranscript("");
-
-                    setInterim("");
-
-                    setFeedback(null);
-
-                    window.scrollTo({
-                      top: 0,
-                      behavior: "smooth",
-                    });
-                  }}
-                >
-                  Next AI Question
-                </button>
-              </div>
-            )}
-            {qIndex === qList.length - 1 && feedback && (
-              <div className="card border-indigo-500/20 bg-indigo-500/5">
-                <div className="flex items-start justify-between gap-6 flex-wrap">
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="h-12 w-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-2xl">
-                        🎉
-                      </div>
-
-                      <div>
-                        <h3 className="text-3xl font-bold">
-                          Mock Interview Completed
-                        </h3>
-
-                        <p className="text-muted mt-1">
-                          Your AI interview summary is ready.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 text-muted">
-                      <p>
-                        ✓ {qList.length}/{qList.length} Questions Completed
-                      </p>
-
-                      <p>✓ {qType} Interview Round</p>
-
-                      <p>✓ {skill} Assessment</p>
-                    </div>
-                  </div>
-
-                  <button
-                    className="btn btn-primary h-fit"
-                    onClick={generateFinalReport}
-                    disabled={finalLoading}
-                  >
-                    {finalLoading
-                      ? "Generating AI Report..."
-                      : "Generate Final Report"}
-                  </button>
-                </div>
-              </div>
-            )}
             {finalReport && (
               <div className="card border-indigo-500/20 bg-indigo-500/5">
                 <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -1214,6 +808,170 @@ export default function Coach() {
                     </ul>
                   </div>
                 )}
+              </div>
+            )}
+            {showFeedbackModal && feedback && (
+              <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="w-full max-w-3xl rounded-3xl border border-white/10 bg-[#0B1120] p-8 max-h-[90vh] overflow-y-auto">
+                  {/* Header */}
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-indigo-300">
+                        AI Interview Feedback
+                      </p>
+
+                      <h2 className="text-4xl font-bold mt-2">
+                        {feedback.score}/10
+                      </h2>
+                    </div>
+
+                    <button
+                      className="text-gray-400 hover:text-white text-2xl"
+                      onClick={() => setShowFeedbackModal(false)}
+                    >
+                      ×
+                    </button>
+                  </div>
+
+                  {/* Summary */}
+                  <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 className="text-xl font-bold mb-4">Summary</h3>
+
+                    <p className="text-muted leading-8">{feedback.summary}</p>
+                  </div>
+
+                  {/* Strengths */}
+                  {!!feedback.strengths?.length && (
+                    <div className="mt-6 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-6">
+                      <h3 className="text-xl font-bold mb-4 text-indigo-300">
+                        Strengths
+                      </h3>
+
+                      <ul className="space-y-3 text-muted">
+                        {feedback.strengths.map((s, i) => (
+                          <li key={i}>✓ {s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Improvements */}
+                  {!!feedback.improvements?.length && (
+                    <div className="mt-6 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-6">
+                      <h3 className="text-xl font-bold mb-4 text-yellow-300">
+                        Improvements
+                      </h3>
+
+                      <ul className="space-y-3 text-muted">
+                        {feedback.improvements.map((s, i) => (
+                          <li key={i}>• {s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Recommendation */}
+                  {feedback.recommendation && (
+                    <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6">
+                      <h3 className="text-xl font-bold mb-4 text-emerald-300">
+                        AI Recommendation
+                      </h3>
+
+                      <p className="text-muted leading-8">
+                        {feedback.recommendation}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Actions */}
+                  <div className="mt-10 flex gap-4 flex-wrap">
+                    {/* Retry */}
+                    <button
+                      className="btn border"
+                      onClick={() => {
+                        setTranscript("");
+
+                        setInterim("");
+
+                        setFeedback(null);
+
+                        setShowFeedbackModal(false);
+
+                        setSeconds(0);
+
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      ↺ Retry Answer
+                    </button>
+
+                    {/* Next Question */}
+                    {qIndex < qList.length - 1 && (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                          if (!feedback) return;
+
+                          setCompletedAnswers((prev) => {
+                            const filtered = prev.filter(
+                              (a) => a.question !== currentQuestion,
+                            );
+
+                            return [
+                              ...filtered,
+                              {
+                                question: currentQuestion,
+                                transcript,
+                                feedback,
+                                metrics,
+                              },
+                            ];
+                          });
+
+                          setShowFeedbackModal(false);
+
+                          moveToNextQuestion();
+                        }}
+                      >
+                        Next Question →
+                      </button>
+                    )}
+                    {/* Final Report */}
+                    {qIndex === qList.length - 1 && (
+                      <button
+                        className="btn btn-primary"
+                        disabled={finalLoading}
+                        onClick={async () => {
+                          const updatedAnswers = completedAnswers.filter(
+                            (a) => a.question !== currentQuestion,
+                          );
+
+                          updatedAnswers.push({
+                            question: currentQuestion,
+                            transcript,
+                            feedback,
+                            metrics,
+                          });
+
+                          setCompletedAnswers(updatedAnswers);
+
+                          setShowFeedbackModal(false);
+
+                          setTimeout(() => {
+                            generateFinalReport();
+                          }, 300);
+                        }}
+                      >
+                        {finalLoading
+                          ? "Generating..."
+                          : "Generate Final Report"}
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
             <ProgressDashboard sessions={completedAnswers} />
