@@ -101,6 +101,8 @@ export default function Coach() {
   const [completedAnswers, setCompletedAnswers] = useState([]);
   const [finalReport, setFinalReport] = useState(null);
   const [finalLoading, setFinalLoading] = useState(false);
+  const [nextCountdown, setNextCountdown] = useState(null);
+  const [autoMoving, setAutoMoving] = useState(false);
   // Refs
   const micRef = useRef(null);
   const timer = useRef(null);
@@ -151,8 +153,8 @@ export default function Coach() {
   }, [role, qType, difficulty, count]);
 
   useEffect(() => {
-    if (status === "idle" && transcript.trim() && !feedback && !loading) {
-      const runAI = async () => {
+    if (status === "idle" && transcript.trim() && !loading) {
+      const timeout = setTimeout(async () => {
         setIsAnalyzing(true);
 
         try {
@@ -160,12 +162,12 @@ export default function Coach() {
         } finally {
           setIsAnalyzing(false);
         }
-      };
+      }, 800);
 
-      runAI();
+      return () => clearTimeout(timeout);
     }
-  }, [status]);
-  
+  }, [status, transcript]);
+
   const generate = async () => {
     if (!controlsDirty) return; // nothing to do
     try {
@@ -254,6 +256,21 @@ export default function Coach() {
           },
         ];
       });
+      const isLastQuestion = qIndex === qList.length - 1;
+
+      if (!isLastQuestion) {
+        setAutoMoving(true);
+        let counter = 4;
+        setNextCountdown(counter);
+        const interval = setInterval(() => {
+          counter--;
+          setNextCountdown(counter);
+          if (counter <= 0) {
+            clearInterval(interval);
+            moveToNextQuestion();
+          }
+        }, 1000);
+      }
     } catch (e) {
       console.error(e);
       alert("AI feedback failed. Try again.");
@@ -264,7 +281,7 @@ export default function Coach() {
 
   const generateFinalReport = async () => {
     if (!completedAnswers.length) return;
-
+    console.log(completedAnswers);
     setFinalLoading(true);
 
     try {
@@ -286,12 +303,52 @@ export default function Coach() {
       const data = await r.json();
 
       setFinalReport(data);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { error } = await supabase.from("user_sessions").insert([
+          {
+            user_id: user.id,
+            role,
+            skill,
+            question: `${qList.length} Question Mock Interview`,
+            transcript: JSON.stringify(completedAnswers),
+            feedback: data,
+            metrics: {
+              totalQuestions: qList.length,
+              completed: true,
+              interviewType: qType,
+            },
+          },
+        ]);
+
+        if (error) {
+          console.error(error);
+        }
+      }
     } catch (e) {
       console.error(e);
       alert("Failed to generate report");
     } finally {
       setFinalLoading(false);
     }
+  };
+
+  const moveToNextQuestion = () => {
+    setQIndex((prev) => prev + 1);
+    setTranscript("");
+    setInterim("");
+    setFeedback(null);
+    setSeconds(0);
+    setNextCountdown(null);
+    setAutoMoving(false);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   // const saveSession = async () => {
@@ -987,6 +1044,27 @@ export default function Coach() {
                 )}
               </div>
             </div>
+            {autoMoving && (
+              <div className="card border-indigo-500/20 bg-indigo-500/5">
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                  <div>
+                    <p className="text-sm text-indigo-300">AI Interview Flow</p>
+
+                    <h3 className="text-2xl font-bold mt-2">
+                      Next Question in {nextCountdown}s...
+                    </h3>
+
+                    <p className="text-muted mt-2">
+                      Preparing your next interview question.
+                    </p>
+                  </div>
+
+                  <button className="btn border" onClick={moveToNextQuestion}>
+                    Skip Now →
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Follow-up Question */}
             {followUpQuestion && (

@@ -31,7 +31,7 @@ Return STRICT JSON with:
   "score": number,
 
   "summary": string,
-
+  "recommendation": string,
   "strengths": [],
 
   "improvements": [],
