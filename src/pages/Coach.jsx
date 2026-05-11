@@ -394,12 +394,12 @@ export default function Coach() {
         <link rel="canonical" href="https://speakai.in/coach" />
       </Helmet>
       <main className="container-p py-10">
-        <div className="grid lg:grid-cols-[340px_1fr] gap-8">
+        <div className="grid lg:grid-cols-[340px_1fr] gap-6">
           {/* LEFT SIDEBAR */}
           <aside className="space-y-6">
             {/* HEADER */}
             <div>
-              <h1 className="text-4xl font-bold">AI Interview Coach</h1>
+              <h1 className="text-3xl font-bold">AI Interview Coach</h1>
 
               <p className="text-muted mt-3">
                 Practice role-specific interviews, improve communication, and
@@ -606,7 +606,7 @@ export default function Coach() {
                       />
                     ))}
                   </div>
-                  <h2 className="text-2xl lg:text-3xl font-bold leading-snug mt-5 max-w-5xl">
+                  <h2 className="text-2xl lg:text-2xl font-bold leading-snug mt-5 max-w-5xl">
                     {currentQuestion || "Select a question"}
                   </h2>
                 </div>
@@ -638,7 +638,7 @@ export default function Coach() {
 
               {/* Wave Placeholder */}
               {/* Voice Visualizer */}
-              <div className="mt-8 rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.01] p-8">
+              <div className="mt-5 rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.01] p-6">
                 <div className="flex items-center justify-center gap-2 h-24">
                   {[...Array(24)].map((_, i) => (
                     <div
@@ -686,7 +686,7 @@ export default function Coach() {
               </div>
 
               {/* Controls */}
-              <div className="flex flex-wrap gap-3 mt-8">
+              <div className="flex flex-wrap gap-3 mt-5">
                 <MicButton
                   ref={micRef}
                   onTranscriptAppend={handleAppend}
@@ -718,7 +718,7 @@ export default function Coach() {
             <div className="card">
               <h3 className="text-2xl font-bold">Transcript</h3>
 
-              <div className="mt-5 rounded-3xl border border-white/10 bg-white/[0.03] p-6 min-h-[260px]">
+              <div className="mt-5 rounded-3xl border border-white/10 bg-white/[0.03] p-6 min-h-[220px]">
                 <div className="flex items-center gap-3 mb-5">
                   <div
                     className={`h-3 w-3 rounded-full ${
@@ -735,7 +735,7 @@ export default function Coach() {
                   </span>
                 </div>
 
-                <p className="leading-8 text-gray-200 whitespace-pre-wrap">
+                <p className="leading-7 text-gray-200 whitespace-pre-wrap">
                   {transcript ||
                     "Start speaking to see your live transcript..."}
 
@@ -760,7 +760,7 @@ export default function Coach() {
                       AI Interview Summary
                     </p>
 
-                    <h2 className="text-3xl font-bold mt-2">
+                    <h2 className="text-2xl font-bold mt-2">
                       {finalReport.overallScore}/10
                     </h2>
                   </div>
@@ -775,10 +775,10 @@ export default function Coach() {
                 </div>
 
                 {/* Summary */}
-                <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6">
+                <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-6">
                   <h3 className="text-xl font-bold mb-4">Final Summary</h3>
 
-                  <p className="text-muted leading-8">{finalReport.summary}</p>
+                  <p className="text-muted leading-7">{finalReport.summary}</p>
                 </div>
 
                 {/* Strengths */}
@@ -811,12 +811,12 @@ export default function Coach() {
                   </div>
                 )}
                 {/* Improvement Roadmap */}
-                <div className="mt-8 rounded-3xl border border-indigo-500/20 bg-indigo-500/5 p-6">
+                <div className="mt-5 rounded-3xl border border-indigo-500/20 bg-indigo-500/5 p-6">
                   <p className="text-sm text-indigo-300 mb-2">
                     Improvement Roadmap
                   </p>
 
-                  <h3 className="text-3xl font-bold mb-6">Your Next Steps</h3>
+                  <h3 className="text-2xl font-bold mb-6">Your Next Steps</h3>
 
                   <div className="space-y-5">
                     {finalReport.improvements?.map((item, i) => (
@@ -833,10 +833,10 @@ export default function Coach() {
                   </div>
                 </div>
                 {/* Practice Again CTA */}
-                <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
+                <div className="mt-5 rounded-3xl border border-white/10 bg-white/5 p-6 text-center">
                   <p className="text-sm text-indigo-300">Continue Improving</p>
 
-                  <h3 className="text-4xl font-bold mt-3">
+                  <h3 className="text-3xl font-bold mt-3">
                     Practice Another Interview
                   </h3>
 
@@ -845,7 +845,7 @@ export default function Coach() {
                     tailored to your target role.
                   </p>
 
-                  <div className="flex flex-wrap justify-center gap-4 mt-8">
+                  <div className="flex flex-wrap justify-center gap-4 mt-5">
                     <button
                       className="btn btn-primary"
                       onClick={() => {
@@ -892,7 +892,7 @@ export default function Coach() {
               <div className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center">
                 <div className="h-20 w-20 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin" />
 
-                <h2 className="text-3xl font-bold mt-8">
+                <h2 className="text-3xl font-bold mt-5">
                   AI is analyzing your answer...
                 </h2>
 
@@ -903,7 +903,7 @@ export default function Coach() {
             )}
             {showFeedbackModal && feedback && (
               <div className="fixed inset-0 z-50 p-6 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-                <div className="w-full max-w-7xl rounded-3xl border border-white/10 bg-[#0B1120] overflow-hidden animate-in fade-in zoom-in-95 duration-300 shadow-[0_25px_80px_rgba(0,0,0,0.7)]">
+                <div className="w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0B1120] overflow-hidden animate-in fade-in zoom-in-95 duration-300 shadow-[0_25px_80px_rgba(0,0,0,0.7)]">
                   {/* HEADER */}
                   <div className="px-7 py-4 border-b border-white/10 flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -912,7 +912,7 @@ export default function Coach() {
                           AI Interview Feedback
                         </p>
 
-                        <h2 className="text-3xl font-bold mt-2">
+                        <h2 className="text-2xl font-bold mt-2">
                           {feedback.score}/10
                         </h2>
                       </div>
@@ -959,14 +959,14 @@ export default function Coach() {
                   </div>
 
                   {/* CONTENT */}
-                  <div className="grid lg:grid-cols-[320px_1fr] gap-8 p-6 max-h-[68vh] overflow-y-auto scrollbar-hide">
+                  <div className="grid lg:grid-cols-[320px_1fr] gap-6 p-6 max-h-[68vh] overflow-y-auto scrollbar-hide">
                     {/* LEFT SIDEBAR */}
                     <div className="space-y-5">
                       {/* WPM */}
                       <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
                         <p className="text-sm text-muted">Words Per Minute</p>
 
-                        <h3 className="text-3xl font-bold mt-3">
+                        <h3 className="text-2xl font-bold mt-3">
                           {metrics?.wpm || 0}
                         </h3>
 
@@ -979,7 +979,7 @@ export default function Coach() {
                       <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-5">
                         <p className="text-sm text-muted">Filler Words</p>
 
-                        <h3 className="text-3xl font-bold mt-3">
+                        <h3 className="text-2xl font-bold mt-3">
                           {metrics?.fillerCount || 0}
                         </h3>
 
@@ -1005,7 +1005,7 @@ export default function Coach() {
                       <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5">
                         <p className="text-sm text-muted">STAR Structure</p>
 
-                        <h3 className="text-3xl font-bold mt-3">
+                        <h3 className="text-2xl font-bold mt-3">
                           {feedback.star?.hasSTAR
                             ? "Strong"
                             : "Needs Improvement"}
@@ -1033,7 +1033,7 @@ export default function Coach() {
                       <div className="rounded-2xl border border-pink-500/20 bg-pink-500/5 p-5">
                         <p className="text-sm text-muted">Technical Depth</p>
 
-                        <h3 className="text-3xl font-bold mt-3">
+                        <h3 className="text-2xl font-bold mt-3">
                           {feedback.scores?.technical || 0}/10
                         </h3>
                       </div>
@@ -1045,7 +1045,7 @@ export default function Coach() {
                       <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                         <h3 className="text-2xl font-bold mb-5">Summary</h3>
 
-                        <p className="text-muted leading-8 text-base">
+                        <p className="text-muted leading-7 text-base">
                           {feedback.summary}
                         </p>
                       </div>
@@ -1091,7 +1091,7 @@ export default function Coach() {
                             AI Recommendation
                           </h3>
 
-                          <p className="text-muted leading-8 text-base">
+                          <p className="text-muted leading-7 text-base">
                             {feedback.recommendation}
                           </p>
                         </div>
@@ -1104,7 +1104,7 @@ export default function Coach() {
                             Suggested Follow-up Question
                           </h3>
 
-                          <p className="text-muted leading-8 text-base">
+                          <p className="text-muted leading-7 text-base">
                             {feedback.followUpQuestion}
                           </p>
                         </div>
@@ -1113,7 +1113,7 @@ export default function Coach() {
                   </div>
 
                   {/* FOOTER */}
-                  <div className="px-6 py-4 border-t border-white/10 bg-[#0F172A] flex items-center justify-between flex-wrap gap-4">
+                  <div className="px-4 py-4 border-t border-white/10 bg-[#0F172A] flex items-center justify-between flex-wrap gap-4">
                     <p className="text-sm text-muted">
                       AI Interview Coach Analysis
                     </p>

@@ -96,17 +96,17 @@ export default function Dashboard() {
     <main className="container-p py-12">
 
       {/* HERO */}
-      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
 
         <p className="text-indigo-300 text-sm">
           AI Interview Dashboard
         </p>
 
-        <h1 className="text-5xl font-bold mt-3">
+        <h1 className="text-3xl font-bold mt-3">
           Welcome back
         </h1>
 
-        <p className="text-muted mt-4 max-w-2xl">
+        <p className="text-muted mt-2 max-w-2xl">
           Track your interview performance,
           communication growth, and AI-powered
           readiness journey.
@@ -122,7 +122,7 @@ export default function Dashboard() {
             Total Interviews
           </p>
 
-          <h2 className="text-5xl font-bold mt-4">
+          <h2 className="text-3xl font-bold mt-4">
             {sessions.length}
           </h2>
         </div>
@@ -132,7 +132,7 @@ export default function Dashboard() {
             Average AI Score
           </p>
 
-          <h2 className="text-5xl font-bold mt-4">
+          <h2 className="text-3xl font-bold mt-4">
             {avgScore}/10
           </h2>
         </div>
@@ -142,7 +142,7 @@ export default function Dashboard() {
             Strongest Skill
           </p>
 
-          <h2 className="text-3xl font-bold mt-4">
+          <h2 className="text-2xl font-bold mt-4">
             {bestSkill || "-"}
           </h2>
         </div>
@@ -152,7 +152,7 @@ export default function Dashboard() {
             Interview Readiness
           </p>
 
-          <h2 className="text-3xl font-bold mt-4">
+          <h2 className="text-2xl font-bold mt-4">
             {readiness}
           </h2>
         </div>
@@ -165,7 +165,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between mb-8">
 
           <div>
-            <h2 className="text-3xl font-bold">
+            <h2 className="text-2xl font-bold">
               Performance Trend
             </h2>
 
@@ -176,7 +176,7 @@ export default function Dashboard() {
 
         </div>
 
-        <div className="h-[320px]">
+        <div className="h-[240px]">
 
           <ResponsiveContainer width="100%" height="100%">
 
@@ -208,7 +208,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between gap-4 flex-wrap">
 
           <div>
-            <h2 className="text-4xl font-bold">
+            <h2 className="text-3xl font-bold">
               Recent Sessions
             </h2>
 
@@ -228,7 +228,7 @@ export default function Dashboard() {
         {!loading && !sessions.length && (
           <div className="card mt-8 text-center py-16">
 
-            <h3 className="text-3xl font-bold">
+            <h3 className="text-2xl font-bold">
               No interviews yet
             </h3>
 
@@ -294,7 +294,7 @@ export default function Dashboard() {
 
                   </div>
 
-                  <p className="text-muted mt-6 leading-8">
+                  <p className="text-muted mt-6 leading-7">
 
                     {session.feedback?.summary}
 

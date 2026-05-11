@@ -25,16 +25,16 @@ body {
 
 /* Layout */
 .container-p {
-  @apply max-w-7xl mx-auto px-5;
+  @apply max-w-6xl mx-auto px-4;
 }
 .section {
-  @apply py-20;
+  @apply py-14;
 }
 .h1 {
-  @apply text-4xl sm:text-5xl font-extrabold leading-tight tracking-tight;
+  @apply text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight;
 }
 .h2 {
-  @apply text-2xl sm:text-3xl font-bold;
+  @apply text-xl sm:text-2xl font-bold;
 }
 .lead {
   @apply text-muted text-lg;
@@ -42,13 +42,13 @@ body {
 
 /* Buttons */
 .btn {
-  @apply inline-flex items-center justify-center rounded-xl border border-border px-4 py-2 transition-transform duration-150;
+  @apply inline-flex items-center justify-center rounded-xl border border-border px-4 py-2 text-sm transition-transform duration-150;
 }
 .btn:hover {
   transform: translateY(-1px);
 }
 .btn-primary {
-  @apply inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium transition-all duration-300;
+  @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-300;
   background: linear-gradient(135deg, rgb(99 102 241), rgb(168 85 247));
 }
 
@@ -62,7 +62,7 @@ body {
 
 /* Cards */
 .card {
-  @apply rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-6 shadow-xl transition-all duration-300;
+  @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-5 shadow-lg transition-all duration-300;
 }
 
 .card:hover {
@@ -70,7 +70,7 @@ body {
 }
 /* Inputs */
 .input {
-  @apply w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none transition-all duration-300;
+  @apply w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm outline-none transition-all duration-300;
 }
 
 .input:focus {
