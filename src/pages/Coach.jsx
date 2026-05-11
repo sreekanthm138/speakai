@@ -542,7 +542,7 @@ export default function Coach() {
                 <span className="text-sm text-muted">{qList.length}</span>
               </div>
 
-              <div className="mt-5 space-y-3 max-h-[450px] overflow-y-auto">
+              <div className="mt-5 space-y-3 max-h-[450px] overflow-y-auto scrollbar-hide">
                 {qList.map((q, i) => (
                   <button
                     key={i}
@@ -760,7 +760,7 @@ export default function Coach() {
                       AI Interview Summary
                     </p>
 
-                    <h2 className="text-4xl font-bold mt-2">
+                    <h2 className="text-3xl font-bold mt-2">
                       {finalReport.overallScore}/10
                     </h2>
                   </div>
@@ -826,17 +826,17 @@ export default function Coach() {
               </div>
             )}
             {showFeedbackModal && feedback && (
-              <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-                <div className="w-full max-w-7xl rounded-3xl border border-white/10 bg-[#0B1120] overflow-hidden animate-in fade-in zoom-in-95 duration-300 shadow-2xl">
+              <div className="fixed inset-0 z-50 p-6 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+                <div className="w-full max-w-7xl rounded-3xl border border-white/10 bg-[#0B1120] overflow-hidden animate-in fade-in zoom-in-95 duration-300 shadow-[0_25px_80px_rgba(0,0,0,0.7)]">
                   {/* HEADER */}
-                  <div className="px-8 py-6 border-b border-white/10 flex items-center justify-between">
-                    <div className="flex items-center gap-6">
+                  <div className="px-7 py-4 border-b border-white/10 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
                       <div>
                         <p className="text-sm text-indigo-300">
                           AI Interview Feedback
                         </p>
 
-                        <h2 className="text-6xl font-bold mt-2">
+                        <h2 className="text-3xl font-bold mt-2">
                           {feedback.score}/10
                         </h2>
                       </div>
@@ -875,7 +875,7 @@ export default function Coach() {
                     </div>
 
                     <button
-                      className="text-gray-400 hover:text-white text-4xl"
+                      className="text-gray-400 hover:text-white text-3xl"
                       onClick={() => setShowFeedbackModal(false)}
                     >
                       ×
@@ -883,14 +883,14 @@ export default function Coach() {
                   </div>
 
                   {/* CONTENT */}
-                  <div className="grid lg:grid-cols-[320px_1fr] gap-8 p-8 max-h-[72vh] overflow-y-auto">
+                  <div className="grid lg:grid-cols-[320px_1fr] gap-8 p-6 max-h-[68vh] overflow-y-auto scrollbar-hide">
                     {/* LEFT SIDEBAR */}
                     <div className="space-y-5">
                       {/* WPM */}
                       <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
                         <p className="text-sm text-muted">Words Per Minute</p>
 
-                        <h3 className="text-5xl font-bold mt-3">
+                        <h3 className="text-3xl font-bold mt-3">
                           {metrics?.wpm || 0}
                         </h3>
 
@@ -903,7 +903,7 @@ export default function Coach() {
                       <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-5">
                         <p className="text-sm text-muted">Filler Words</p>
 
-                        <h3 className="text-5xl font-bold mt-3">
+                        <h3 className="text-3xl font-bold mt-3">
                           {metrics?.fillerCount || 0}
                         </h3>
 
@@ -957,7 +957,7 @@ export default function Coach() {
                       <div className="rounded-2xl border border-pink-500/20 bg-pink-500/5 p-5">
                         <p className="text-sm text-muted">Technical Depth</p>
 
-                        <h3 className="text-5xl font-bold mt-3">
+                        <h3 className="text-3xl font-bold mt-3">
                           {feedback.scores?.technical || 0}/10
                         </h3>
                       </div>
@@ -966,17 +966,17 @@ export default function Coach() {
                     {/* RIGHT CONTENT */}
                     <div className="space-y-6">
                       {/* Summary */}
-                      <div className="rounded-2xl border border-white/10 bg-white/5 p-7">
+                      <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                         <h3 className="text-2xl font-bold mb-5">Summary</h3>
 
-                        <p className="text-muted leading-8 text-lg">
+                        <p className="text-muted leading-8 text-base">
                           {feedback.summary}
                         </p>
                       </div>
 
                       {/* Strengths */}
                       {!!feedback.strengths?.length && (
-                        <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-7">
+                        <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
                           <h3 className="text-2xl font-bold mb-5 text-indigo-300">
                             Strengths
                           </h3>
@@ -993,7 +993,7 @@ export default function Coach() {
 
                       {/* Improvements */}
                       {!!feedback.improvements?.length && (
-                        <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-7">
+                        <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-5">
                           <h3 className="text-2xl font-bold mb-5 text-yellow-300">
                             Improvements
                           </h3>
@@ -1010,12 +1010,12 @@ export default function Coach() {
 
                       {/* Recommendation */}
                       {feedback.recommendation && (
-                        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-7">
+                        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5">
                           <h3 className="text-2xl font-bold mb-5 text-emerald-300">
                             AI Recommendation
                           </h3>
 
-                          <p className="text-muted leading-8 text-lg">
+                          <p className="text-muted leading-8 text-base">
                             {feedback.recommendation}
                           </p>
                         </div>
@@ -1023,12 +1023,12 @@ export default function Coach() {
 
                       {/* Follow Up */}
                       {feedback.followUpQuestion && (
-                        <div className="rounded-2xl border border-purple-500/20 bg-purple-500/5 p-7">
+                        <div className="rounded-2xl border border-purple-500/20 bg-purple-500/5 p-5">
                           <h3 className="text-2xl font-bold mb-5 text-purple-300">
                             Suggested Follow-up Question
                           </h3>
 
-                          <p className="text-muted leading-8 text-lg">
+                          <p className="text-muted leading-8 text-base">
                             {feedback.followUpQuestion}
                           </p>
                         </div>
@@ -1037,7 +1037,7 @@ export default function Coach() {
                   </div>
 
                   {/* FOOTER */}
-                  <div className="px-8 py-5 border-t border-white/10 bg-[#0F172A] flex items-center justify-between flex-wrap gap-4">
+                  <div className="px-6 py-4 border-t border-white/10 bg-[#0F172A] flex items-center justify-between flex-wrap gap-4">
                     <p className="text-sm text-muted">
                       AI Interview Coach Analysis
                     </p>
