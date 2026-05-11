@@ -93,6 +93,7 @@ export default function Coach() {
   const [feedback, setFeedback] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
+  const [interviewSeconds, setInterviewSeconds] = useState(0);
   // Countdown
   const [useCountdown, setUseCountdown] = useState(true);
   const [limit, setLimit] = useState(90); // 60/90/120
@@ -167,6 +168,14 @@ export default function Coach() {
       return () => clearTimeout(timeout);
     }
   }, [status, transcript]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setInterviewSeconds((s) => s + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const generate = async () => {
     if (!controlsDirty) return; // nothing to do
@@ -380,6 +389,14 @@ export default function Coach() {
     `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   const remaining = Math.max(0, limit - seconds);
 
+  const formatInterviewTime = (secs) => {
+    const mins = Math.floor(secs / 60);
+
+    const sec = secs % 60;
+
+    return `${mins}m ${sec}s`;
+  };
+  const difficulty = qIndex <= 1 ? "Easy" : qIndex <= 3 ? "Medium" : "Hard";
   /* ----------------------------------- UI ------------------------------------ */
   return (
     <>
@@ -394,6 +411,55 @@ export default function Coach() {
         <link rel="canonical" href="https://speakai.in/coach" />
       </Helmet>
       <main className="container-p py-10">
+        {/* Interview Session Bar */}
+        <div className="sticky top-20 z-30 mb-6">
+          <div className="rounded-2xl border border-white/10 bg-[#0F172A]/90 backdrop-blur-xl px-5 py-4 shadow-lg">
+            <div className="flex items-center justify-between gap-6 flex-wrap">
+              {/* LEFT */}
+              <div>
+                <p className="text-xs uppercase tracking-wider text-indigo-300">
+                  AI Interview Session
+                </p>
+
+                <h2 className="text-xl font-bold mt-1">
+                  {role || "Frontend"} Interview
+                </h2>
+              </div>
+
+              {/* CENTER */}
+              <div className="flex items-center gap-6 flex-wrap">
+                <div>
+                  <p className="text-xs text-muted">Progress</p>
+
+                  <p className="font-semibold mt-1">
+                    Question {qIndex + 1}/{qList.length}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-muted">Difficulty</p>
+
+                  <p className="font-semibold mt-1">{difficulty}</p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-muted">Elapsed Time</p>
+
+                  <p className="font-semibold mt-1">
+                    {formatInterviewTime(interviewSeconds)}
+                  </p>
+                </div>
+              </div>
+
+              {/* RIGHT */}
+              <div className="flex items-center gap-3">
+                <div className="h-3 w-3 rounded-full bg-emerald-400 animate-pulse" />
+
+                <p className="text-sm text-emerald-300">AI Coach Active</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="grid lg:grid-cols-[340px_1fr] gap-6">
           {/* LEFT SIDEBAR */}
           <aside className="space-y-6">
