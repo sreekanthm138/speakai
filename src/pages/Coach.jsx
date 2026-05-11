@@ -826,83 +826,223 @@ export default function Coach() {
               </div>
             )}
             {showFeedbackModal && feedback && (
-              <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-                <div className="w-full max-w-6xl rounded-3xl border border-white/10 bg-[#0B1120] overflow-hidden animate-in fade-in zoom-in-95 duration-300">
-                  {/* Header */}
-                  <div className="px-8 py-6 border-b border-white/10 flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-indigo-300">
-                        AI Interview Feedback
-                      </p>
+              <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+                <div className="w-full max-w-7xl rounded-3xl border border-white/10 bg-[#0B1120] overflow-hidden animate-in fade-in zoom-in-95 duration-300 shadow-2xl">
+                  {/* HEADER */}
+                  <div className="px-8 py-6 border-b border-white/10 flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                      <div>
+                        <p className="text-sm text-indigo-300">
+                          AI Interview Feedback
+                        </p>
 
-                      <h2 className="text-5xl font-bold mt-2">
-                        {feedback.score}/10
-                      </h2>
+                        <h2 className="text-6xl font-bold mt-2">
+                          {feedback.score}/10
+                        </h2>
+                      </div>
+
+                      <div className="hidden md:block h-16 w-px bg-white/10" />
+
+                      <div className="hidden md:flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted text-sm">
+                            Confidence:
+                          </span>
+
+                          <span className="font-semibold">
+                            {feedback.scores?.confidence || 0}/10
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted text-sm">Clarity:</span>
+
+                          <span className="font-semibold">
+                            {feedback.scores?.clarity || 0}/10
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted text-sm">
+                            Communication:
+                          </span>
+
+                          <span className="font-semibold">
+                            {feedback.scores?.communication || 0}/10
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
                     <button
-                      className="text-gray-400 hover:text-white text-3xl"
+                      className="text-gray-400 hover:text-white text-4xl"
                       onClick={() => setShowFeedbackModal(false)}
                     >
                       ×
                     </button>
                   </div>
 
-                  <div className="p-8 max-h-[65vh] overflow-y-auto space-y-6">
-                    {/* Summary */}
-                    <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6">
-                      <h3 className="text-xl font-bold mb-4">Summary</h3>
+                  {/* CONTENT */}
+                  <div className="grid lg:grid-cols-[320px_1fr] gap-8 p-8 max-h-[72vh] overflow-y-auto">
+                    {/* LEFT SIDEBAR */}
+                    <div className="space-y-5">
+                      {/* WPM */}
+                      <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
+                        <p className="text-sm text-muted">Words Per Minute</p>
 
-                      <p className="text-muted leading-8">{feedback.summary}</p>
-                    </div>
-
-                    {/* Strengths */}
-                    {!!feedback.strengths?.length && (
-                      <div className="mt-6 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-6">
-                        <h3 className="text-xl font-bold mb-4 text-indigo-300">
-                          Strengths
+                        <h3 className="text-5xl font-bold mt-3">
+                          {metrics?.wpm || 0}
                         </h3>
 
-                        <ul className="space-y-3 text-muted">
-                          {feedback.strengths.map((s, i) => (
-                            <li key={i}>✓ {s}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Improvements */}
-                    {!!feedback.improvements?.length && (
-                      <div className="mt-6 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-6">
-                        <h3 className="text-xl font-bold mb-4 text-yellow-300">
-                          Improvements
-                        </h3>
-
-                        <ul className="space-y-3 text-muted">
-                          {feedback.improvements.map((s, i) => (
-                            <li key={i}>• {s}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Recommendation */}
-                    {feedback.recommendation && (
-                      <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6">
-                        <h3 className="text-xl font-bold mb-4 text-emerald-300">
-                          AI Recommendation
-                        </h3>
-
-                        <p className="text-muted leading-8">
-                          {feedback.recommendation}
+                        <p className="text-xs text-muted mt-3">
+                          Ideal speaking pace: 110–160 WPM
                         </p>
                       </div>
-                    )}
+
+                      {/* Fillers */}
+                      <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-5">
+                        <p className="text-sm text-muted">Filler Words</p>
+
+                        <h3 className="text-5xl font-bold mt-3">
+                          {metrics?.fillerCount || 0}
+                        </h3>
+
+                        <div className="flex flex-wrap gap-2 mt-4">
+                          {metrics?.fillers?.length ? (
+                            metrics.fillers.map((f, i) => (
+                              <span
+                                key={i}
+                                className="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-300 text-xs"
+                              >
+                                {f}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-sm text-muted">
+                              Excellent clarity
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* STAR */}
+                      <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+                        <p className="text-sm text-muted">STAR Structure</p>
+
+                        <h3 className="text-3xl font-bold mt-3">
+                          {feedback.star?.hasSTAR
+                            ? "Strong"
+                            : "Needs Improvement"}
+                        </h3>
+
+                        {!!feedback.star?.missing?.length && (
+                          <div className="mt-4">
+                            <p className="text-xs text-muted mb-2">Missing:</p>
+
+                            <div className="flex flex-wrap gap-2">
+                              {feedback.star.missing.map((m, i) => (
+                                <span
+                                  key={i}
+                                  className="px-3 py-1 rounded-full bg-red-500/10 text-red-300 text-xs"
+                                >
+                                  {m}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Technical */}
+                      <div className="rounded-2xl border border-pink-500/20 bg-pink-500/5 p-5">
+                        <p className="text-sm text-muted">Technical Depth</p>
+
+                        <h3 className="text-5xl font-bold mt-3">
+                          {feedback.scores?.technical || 0}/10
+                        </h3>
+                      </div>
+                    </div>
+
+                    {/* RIGHT CONTENT */}
+                    <div className="space-y-6">
+                      {/* Summary */}
+                      <div className="rounded-2xl border border-white/10 bg-white/5 p-7">
+                        <h3 className="text-2xl font-bold mb-5">Summary</h3>
+
+                        <p className="text-muted leading-8 text-lg">
+                          {feedback.summary}
+                        </p>
+                      </div>
+
+                      {/* Strengths */}
+                      {!!feedback.strengths?.length && (
+                        <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-7">
+                          <h3 className="text-2xl font-bold mb-5 text-indigo-300">
+                            Strengths
+                          </h3>
+
+                          <ul className="space-y-4 text-muted">
+                            {feedback.strengths.map((s, i) => (
+                              <li key={i} className="leading-7">
+                                ✓ {s}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Improvements */}
+                      {!!feedback.improvements?.length && (
+                        <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-7">
+                          <h3 className="text-2xl font-bold mb-5 text-yellow-300">
+                            Improvements
+                          </h3>
+
+                          <ul className="space-y-4 text-muted">
+                            {feedback.improvements.map((s, i) => (
+                              <li key={i} className="leading-7">
+                                • {s}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Recommendation */}
+                      {feedback.recommendation && (
+                        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-7">
+                          <h3 className="text-2xl font-bold mb-5 text-emerald-300">
+                            AI Recommendation
+                          </h3>
+
+                          <p className="text-muted leading-8 text-lg">
+                            {feedback.recommendation}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Follow Up */}
+                      {feedback.followUpQuestion && (
+                        <div className="rounded-2xl border border-purple-500/20 bg-purple-500/5 p-7">
+                          <h3 className="text-2xl font-bold mb-5 text-purple-300">
+                            Suggested Follow-up Question
+                          </h3>
+
+                          <p className="text-muted leading-8 text-lg">
+                            {feedback.followUpQuestion}
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="px-8 py-5 border-t border-white/10 bg-[#0F172A] flex gap-4 justify-end sticky bottom-0">
-                    <div className="mt-10 flex gap-4 flex-wrap">
+                  {/* FOOTER */}
+                  <div className="px-8 py-5 border-t border-white/10 bg-[#0F172A] flex items-center justify-between flex-wrap gap-4">
+                    <p className="text-sm text-muted">
+                      AI Interview Coach Analysis
+                    </p>
+
+                    <div className="flex gap-4 flex-wrap">
                       {/* Retry */}
                       <button
                         className="btn border"
@@ -957,6 +1097,7 @@ export default function Coach() {
                           Next Question →
                         </button>
                       )}
+
                       {/* Final Report */}
                       {qIndex === qList.length - 1 && (
                         <button
