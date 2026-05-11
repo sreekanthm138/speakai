@@ -92,6 +92,7 @@ export default function Coach() {
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
   // Countdown
   const [useCountdown, setUseCountdown] = useState(true);
   const [limit, setLimit] = useState(90); // 60/90/120
@@ -220,7 +221,7 @@ export default function Coach() {
 
     setLoading(true);
     setFeedback(null);
-
+    setFeedbackLoading(true);
     try {
       const r = await fetch("/.netlify/functions/ai-feedback", {
         method: "POST",
@@ -248,6 +249,7 @@ export default function Coach() {
       alert("AI feedback failed. Try again.");
     } finally {
       setLoading(false);
+      setFeedbackLoading(false);
     }
   };
 
@@ -810,166 +812,183 @@ export default function Coach() {
                 )}
               </div>
             )}
+            {feedbackLoading && (
+              <div className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center">
+                <div className="h-20 w-20 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin" />
+
+                <h2 className="text-3xl font-bold mt-8">
+                  AI is analyzing your answer...
+                </h2>
+
+                <p className="text-muted mt-3">
+                  Evaluating communication, clarity, confidence & STAR structure
+                </p>
+              </div>
+            )}
             {showFeedbackModal && feedback && (
               <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-                <div className="w-full max-w-3xl rounded-3xl border border-white/10 bg-[#0B1120] p-8 max-h-[90vh] overflow-y-auto">
+                <div className="w-full max-w-6xl rounded-3xl border border-white/10 bg-[#0B1120] overflow-hidden animate-in fade-in zoom-in-95 duration-300">
                   {/* Header */}
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="px-8 py-6 border-b border-white/10 flex items-start justify-between">
                     <div>
                       <p className="text-sm text-indigo-300">
                         AI Interview Feedback
                       </p>
 
-                      <h2 className="text-4xl font-bold mt-2">
+                      <h2 className="text-5xl font-bold mt-2">
                         {feedback.score}/10
                       </h2>
                     </div>
 
                     <button
-                      className="text-gray-400 hover:text-white text-2xl"
+                      className="text-gray-400 hover:text-white text-3xl"
                       onClick={() => setShowFeedbackModal(false)}
                     >
                       ×
                     </button>
                   </div>
 
-                  {/* Summary */}
-                  <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6">
-                    <h3 className="text-xl font-bold mb-4">Summary</h3>
+                  <div className="p-8 max-h-[65vh] overflow-y-auto space-y-6">
+                    {/* Summary */}
+                    <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6">
+                      <h3 className="text-xl font-bold mb-4">Summary</h3>
 
-                    <p className="text-muted leading-8">{feedback.summary}</p>
+                      <p className="text-muted leading-8">{feedback.summary}</p>
+                    </div>
+
+                    {/* Strengths */}
+                    {!!feedback.strengths?.length && (
+                      <div className="mt-6 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-6">
+                        <h3 className="text-xl font-bold mb-4 text-indigo-300">
+                          Strengths
+                        </h3>
+
+                        <ul className="space-y-3 text-muted">
+                          {feedback.strengths.map((s, i) => (
+                            <li key={i}>✓ {s}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Improvements */}
+                    {!!feedback.improvements?.length && (
+                      <div className="mt-6 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-6">
+                        <h3 className="text-xl font-bold mb-4 text-yellow-300">
+                          Improvements
+                        </h3>
+
+                        <ul className="space-y-3 text-muted">
+                          {feedback.improvements.map((s, i) => (
+                            <li key={i}>• {s}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Recommendation */}
+                    {feedback.recommendation && (
+                      <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6">
+                        <h3 className="text-xl font-bold mb-4 text-emerald-300">
+                          AI Recommendation
+                        </h3>
+
+                        <p className="text-muted leading-8">
+                          {feedback.recommendation}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Strengths */}
-                  {!!feedback.strengths?.length && (
-                    <div className="mt-6 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-6">
-                      <h3 className="text-xl font-bold mb-4 text-indigo-300">
-                        Strengths
-                      </h3>
-
-                      <ul className="space-y-3 text-muted">
-                        {feedback.strengths.map((s, i) => (
-                          <li key={i}>✓ {s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Improvements */}
-                  {!!feedback.improvements?.length && (
-                    <div className="mt-6 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-6">
-                      <h3 className="text-xl font-bold mb-4 text-yellow-300">
-                        Improvements
-                      </h3>
-
-                      <ul className="space-y-3 text-muted">
-                        {feedback.improvements.map((s, i) => (
-                          <li key={i}>• {s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Recommendation */}
-                  {feedback.recommendation && (
-                    <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6">
-                      <h3 className="text-xl font-bold mb-4 text-emerald-300">
-                        AI Recommendation
-                      </h3>
-
-                      <p className="text-muted leading-8">
-                        {feedback.recommendation}
-                      </p>
-                    </div>
-                  )}
-
                   {/* Actions */}
-                  <div className="mt-10 flex gap-4 flex-wrap">
-                    {/* Retry */}
-                    <button
-                      className="btn border"
-                      onClick={() => {
-                        setTranscript("");
-
-                        setInterim("");
-
-                        setFeedback(null);
-
-                        setShowFeedbackModal(false);
-
-                        setSeconds(0);
-
-                        window.scrollTo({
-                          top: 0,
-                          behavior: "smooth",
-                        });
-                      }}
-                    >
-                      ↺ Retry Answer
-                    </button>
-
-                    {/* Next Question */}
-                    {qIndex < qList.length - 1 && (
+                  <div className="px-8 py-5 border-t border-white/10 bg-[#0F172A] flex gap-4 justify-end sticky bottom-0">
+                    <div className="mt-10 flex gap-4 flex-wrap">
+                      {/* Retry */}
                       <button
-                        className="btn btn-primary"
+                        className="btn border"
                         onClick={() => {
-                          if (!feedback) return;
+                          setTranscript("");
 
-                          setCompletedAnswers((prev) => {
-                            const filtered = prev.filter(
+                          setInterim("");
+
+                          setFeedback(null);
+
+                          setShowFeedbackModal(false);
+
+                          setSeconds(0);
+
+                          window.scrollTo({
+                            top: 0,
+                            behavior: "smooth",
+                          });
+                        }}
+                      >
+                        ↺ Retry Answer
+                      </button>
+
+                      {/* Next Question */}
+                      {qIndex < qList.length - 1 && (
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => {
+                            if (!feedback) return;
+
+                            setCompletedAnswers((prev) => {
+                              const filtered = prev.filter(
+                                (a) => a.question !== currentQuestion,
+                              );
+
+                              return [
+                                ...filtered,
+                                {
+                                  question: currentQuestion,
+                                  transcript,
+                                  feedback,
+                                  metrics,
+                                },
+                              ];
+                            });
+
+                            setShowFeedbackModal(false);
+
+                            moveToNextQuestion();
+                          }}
+                        >
+                          Next Question →
+                        </button>
+                      )}
+                      {/* Final Report */}
+                      {qIndex === qList.length - 1 && (
+                        <button
+                          className="btn btn-primary"
+                          disabled={finalLoading}
+                          onClick={async () => {
+                            const updatedAnswers = completedAnswers.filter(
                               (a) => a.question !== currentQuestion,
                             );
 
-                            return [
-                              ...filtered,
-                              {
-                                question: currentQuestion,
-                                transcript,
-                                feedback,
-                                metrics,
-                              },
-                            ];
-                          });
+                            updatedAnswers.push({
+                              question: currentQuestion,
+                              transcript,
+                              feedback,
+                              metrics,
+                            });
 
-                          setShowFeedbackModal(false);
+                            setCompletedAnswers(updatedAnswers);
 
-                          moveToNextQuestion();
-                        }}
-                      >
-                        Next Question →
-                      </button>
-                    )}
-                    {/* Final Report */}
-                    {qIndex === qList.length - 1 && (
-                      <button
-                        className="btn btn-primary"
-                        disabled={finalLoading}
-                        onClick={async () => {
-                          const updatedAnswers = completedAnswers.filter(
-                            (a) => a.question !== currentQuestion,
-                          );
+                            setShowFeedbackModal(false);
 
-                          updatedAnswers.push({
-                            question: currentQuestion,
-                            transcript,
-                            feedback,
-                            metrics,
-                          });
-
-                          setCompletedAnswers(updatedAnswers);
-
-                          setShowFeedbackModal(false);
-
-                          setTimeout(() => {
-                            generateFinalReport();
-                          }, 300);
-                        }}
-                      >
-                        {finalLoading
-                          ? "Generating..."
-                          : "Generate Final Report"}
-                      </button>
-                    )}
+                            setTimeout(() => {
+                              generateFinalReport();
+                            }, 300);
+                          }}
+                        >
+                          {finalLoading
+                            ? "Generating..."
+                            : "Generate Final Report"}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
