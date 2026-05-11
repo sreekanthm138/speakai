@@ -7,7 +7,7 @@ export default async (req) => {
 
   try {
     const { role, skill, qType, answers } = await req.json();
-
+    const validAnswers = answers.filter((a) => !a.feedback?.error);
     const prompt = `
 Analyze this complete mock interview.
 
@@ -21,17 +21,21 @@ Interview Type:
 ${qType}
 
 Questions Answered:
-${answers.length}
+${validAnswers.length}
 
 Interview Data:
-${JSON.stringify(answers)}
+${JSON.stringify(validAnswers)}
 
 Evaluate:
-- technical communication
-- confidence
-- STAR storytelling
-- clarity
+- technical knowledge depth
+- communication clarity
+- confidence level
+- STAR storytelling quality
 - interview readiness
+- speaking quality
+- filler word usage
+- explanation structure
+- practical understanding
 
 Return strict JSON:
 
@@ -48,6 +52,12 @@ Return strict JSON:
     "Improve STAR storytelling"
   ]
 }
+
+IMPORTANT:
+Return ONLY valid JSON.
+Do NOT use markdown.
+Do NOT wrap response in \`\`\`json.
+
 `;
 
     const r = await fetch(OPENAI_URL, {
@@ -77,7 +87,25 @@ Return strict JSON:
 
     const text = data.choices?.[0]?.message?.content || "{}";
 
-    const parsed = JSON.parse(text);
+    const cleaned = text
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    let parsed = {};
+
+    try {
+      const match = cleaned.match(/\{[\s\S]*\}$/);
+      parsed = match ? JSON.parse(match[0]) : JSON.parse(cleaned);
+    } catch {
+      parsed = {
+        overallScore: 6,
+        recommendation: "Needs More Practice",
+        summary: "Unable to fully generate AI report.",
+        strengths: [],
+        improvements: ["Practice more interview questions"],
+      };
+    }
 
     return new Response(JSON.stringify(parsed), {
       headers: {

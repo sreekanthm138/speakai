@@ -243,19 +243,22 @@ export default function Coach() {
       setFeedback(data);
 
       setFollowUpQuestion(data.followUpQuestion || "");
-      setCompletedAnswers((prev) => {
-        const filtered = prev.filter((a) => a.question !== currentQuestion);
 
-        return [
-          ...filtered,
-          {
-            question: currentQuestion,
-            transcript,
-            feedback: data,
-            metrics,
-          },
-        ];
-      });
+      if (!data.error) {
+        setCompletedAnswers((prev) => {
+          const filtered = prev.filter((a) => a.question !== currentQuestion);
+
+          return [
+            ...filtered,
+            {
+              question: currentQuestion,
+              transcript,
+              feedback: data,
+              metrics,
+            },
+          ];
+        });
+      }
       const isLastQuestion = qIndex === qList.length - 1;
 
       if (!isLastQuestion) {

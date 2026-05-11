@@ -159,10 +159,28 @@ async function callOpenAIWithRetry(body, tries = 3) {
     lastText = await r.text();
     if (r.ok) {
       const data = JSON.parse(lastText);
+
       const text = data.choices?.[0]?.message?.content || "{}";
-      // try to extract JSON if the model added extra prose
-      const match = text.match(/\{[\s\S]*\}$/);
-      const parsed = match ? JSON.parse(match[0]) : JSON.parse(text);
+
+      // remove markdown code blocks
+      const cleaned = text
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      // extract json safely
+      const match = cleaned.match(/\{[\s\S]*\}$/);
+
+      let parsed = {};
+
+      try {
+        parsed = match ? JSON.parse(match[0]) : JSON.parse(cleaned);
+      } catch (e) {
+        console.log("AI JSON Parse Error:", cleaned);
+
+        throw new Error("Invalid AI JSON response");
+      }
+
       return parsed;
     }
 
