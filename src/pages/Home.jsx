@@ -199,110 +199,254 @@ export default function Home() {
 
         {/* How It Works */}
         <motion.section
-          className="container-p py-20"
+          className="relative py-24 overflow-hidden"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-4xl font-bold">How SpeakAI Works</h2>
-
-            <p className="text-muted mt-4 text-lg">
-              Practice interviews in a realistic AI-powered environment.
-            </p>
+          {/* Background Glow */}
+          <div className="absolute inset-0 -z-10 opacity-40">
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary/20 blur-3xl rounded-full" />
+            <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-violet-500/20 blur-3xl rounded-full" />
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mt-16">
-            <div className="relative card text-center">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 h-10 w-10 rounded-full bg-primary flex items-center justify-center font-bold">
-                1
-              </div>
+          <div className="container-p max-w-7xl mx-auto">
+            {/* Heading */}
+            <div className="text-center max-w-3xl mx-auto">
+              <p className="text-primary font-semibold tracking-widest uppercase mb-4">
+                How It Works
+              </p>
 
-              <div className="pt-8">
-                <div className="text-5xl mb-4">🎯</div>
+              <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+                Your Path to Interview Confidence
+              </h2>
 
-                <h3 className="text-2xl font-bold">Select Role & Skill</h3>
-
-                <p className="text-muted mt-4">
-                  Choose frontend engineering, React, JavaScript, behavioral
-                  interviews, and more.
-                </p>
-              </div>
+              <p className="text-muted mt-5 text-lg">
+                Three simple steps to improve your speaking and ace interviews.
+              </p>
             </div>
 
-            <div className="relative card text-center">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 h-10 w-10 rounded-full bg-primary flex items-center justify-center font-bold">
-                2
+            {/* Steps */}
+            <div className="relative grid md:grid-cols-3 gap-8 mt-20">
+              {/* Line Connector */}
+              <div className="hidden md:block absolute top-10 left-[18%] right-[18%] border-t border-dashed border-primary/40" />
+
+              {/* STEP 1 */}
+              <div className="relative">
+                {/* Number */}
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-10">
+                  <div className="h-16 w-16 rounded-full border-4 border-primary/40 bg-background shadow-[0_0_30px_rgba(139,92,246,0.6)] flex items-center justify-center">
+                    <span className="text-2xl font-bold text-primary">01</span>
+                  </div>
+                </div>
+
+                <div className="rounded-3xl border border-primary/20 bg-card/60 backdrop-blur-xl p-10 text-center hover:-translate-y-2 transition duration-300 shadow-xl">
+                  <div className="text-6xl mb-6">🎯</div>
+
+                  <h3 className="text-3xl font-bold">Select Role & Skill</h3>
+
+                  <p className="text-muted mt-5 leading-relaxed text-lg">
+                    Choose your role, skills, and interview type. We customize
+                    the experience just for you.
+                  </p>
+                </div>
               </div>
 
-              <div className="pt-8">
-                <div className="text-5xl mb-4">🎤</div>
+              {/* STEP 2 */}
+              <div className="relative">
+                {/* Arrow */}
+                {/* <div className="hidden md:flex absolute -left-5 top-4 h-12 w-12 rounded-full bg-primary items-center justify-center shadow-lg">
+                  <span className="text-2xl text-white">→</span>
+                </div> */}
 
-                <h3 className="text-2xl font-bold">Answer with Voice</h3>
+                {/* Number */}
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-10">
+                  <div className="h-16 w-16 rounded-full border-4 border-primary/40 bg-background shadow-[0_0_30px_rgba(139,92,246,0.6)] flex items-center justify-center">
+                    <span className="text-2xl font-bold text-primary">02</span>
+                  </div>
+                </div>
 
-                <p className="text-muted mt-4">
-                  Practice speaking naturally and improve communication
-                  confidence.
-                </p>
+                <div className="rounded-3xl border border-primary/20 bg-card/60 backdrop-blur-xl p-10 text-center hover:-translate-y-2 transition duration-300 shadow-xl">
+                  <div className="text-6xl mb-6">🎤</div>
+
+                  <h3 className="text-3xl font-bold">Answer with Voice</h3>
+
+                  <p className="text-muted mt-5 leading-relaxed text-lg">
+                    Speak your answers naturally. Our AI listens, analyzes, and
+                    provides real-time insights.
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="relative card text-center">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 h-10 w-10 rounded-full bg-primary flex items-center justify-center font-bold">
-                3
-              </div>
+              {/* STEP 3 */}
+              <div className="relative">
+                {/* Arrow */}
+                {/* <div className="hidden md:flex absolute -left-5 top-4 h-12 w-12 rounded-full bg-primary items-center justify-center shadow-lg">
+                  <span className="text-2xl text-white">→</span>
+                </div> */}
 
-              <div className="pt-8">
-                <div className="text-5xl mb-4">🤖</div>
+                {/* Number */}
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-10">
+                  <div className="h-16 w-16 rounded-full border-4 border-primary/40 bg-background shadow-[0_0_30px_rgba(139,92,246,0.6)] flex items-center justify-center">
+                    <span className="text-2xl font-bold text-primary">03</span>
+                  </div>
+                </div>
 
-                <h3 className="text-2xl font-bold">Get AI Feedback</h3>
+                <div className="rounded-3xl border border-primary/20 bg-card/60 backdrop-blur-xl p-10 text-center hover:-translate-y-2 transition duration-300 shadow-xl">
+                  <div className="text-6xl mb-6">🤖</div>
 
-                <p className="text-muted mt-4">
-                  Receive instant feedback on clarity, STAR structure,
-                  confidence, and technical explanations.
-                </p>
+                  <h3 className="text-3xl font-bold">Get AI Feedback</h3>
+
+                  <p className="text-muted mt-5 leading-relaxed text-lg">
+                    Receive instant, actionable feedback on confidence, clarity,
+                    structure, and communication.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </motion.section>
 
         {/* Add Interview Categories Section */}
+        {/* Interview Categories */}
         <motion.section
-          className="container-p py-20"
+          className="relative py-16 overflow-hidden"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-4xl font-bold">
-              Practice Every Interview Type
-            </h2>
-
-            <p className="text-muted mt-4 text-lg">
-              Prepare for technical and behavioral interviews with AI coaching.
-            </p>
+          {/* Background Glow */}
+          <div className="absolute inset-0 -z-10 opacity-40">
+            <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/20 blur-3xl rounded-full" />
+            <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-violet-500/20 blur-3xl rounded-full" />
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-14">
-            {[
-              "React Interviews",
-              "JavaScript Interviews",
-              "Frontend Engineering",
-              "Behavioral Interviews",
-              "HR Round Practice",
-              "Communication Skills",
-              "System Design",
-              "Mock AI Interviews",
-            ].map((item) => (
-              <div
-                key={item}
-                className="rounded-2xl border bg-card/50 backdrop-blur p-6 text-center hover:-translate-y-1 transition"
+          <div className="w-full">
+            {/* Heading */}
+            <div className="text-center max-w-4xl mx-auto px-6">
+              <p className="text-primary font-semibold tracking-[0.3em] uppercase mb-3">
+                Interview Categories
+              </p>
+
+              <h2 className="text-4xl md:text-6xl font-bold leading-tight">
+                Practice Every Interview Type
+              </h2>
+
+              <p className="text-muted mt-4 text-lg">
+                Prepare for technical, behavioral, and communication interviews
+                with AI-powered coaching.
+              </p>
+            </div>
+
+            {/* Row 1 */}
+            <div className="relative mt-12 overflow-hidden">
+              {/* Left Gradient */}
+              <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-background to-transparent" />
+
+              {/* Right Gradient */}
+              <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-background to-transparent" />
+
+              <motion.div
+                className="flex gap-4 w-max"
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{
+                  repeat: Infinity,
+                  ease: "linear",
+                  duration: 45,
+                }}
               >
-                <h3 className="font-semibold">{item}</h3>
-              </div>
-            ))}
+                {[
+                  "⚛️ React Interviews",
+                  "🟨 JavaScript",
+                  "💻 Frontend Engineering",
+                  "🤖 AI Mock Interviews",
+                  "🧠 System Design",
+                  "🎯 Behavioral Interviews",
+                  "🗣️ Communication Skills",
+                  "📦 Redux",
+                  "🧩 DSA",
+                  "🔥 TypeScript",
+                ]
+                  .concat([
+                    "⚛️ React Interviews",
+                    "🟨 JavaScript",
+                    "💻 Frontend Engineering",
+                    "🤖 AI Mock Interviews",
+                    "🧠 System Design",
+                    "🎯 Behavioral Interviews",
+                    "🗣️ Communication Skills",
+                    "📦 Redux",
+                    "🧩 DSA",
+                    "🔥 TypeScript",
+                  ])
+                  .map((item, index) => (
+                    <div
+                      key={index}
+                      className="group min-w-[240px] rounded-2xl border border-white/10 bg-card/40 backdrop-blur-xl px-6 py-5 flex items-center justify-center text-center hover:border-primary/50 transition duration-300"
+                    >
+                      <h3 className="text-lg font-semibold group-hover:text-primary transition">
+                        {item}
+                      </h3>
+                    </div>
+                  ))}
+              </motion.div>
+            </div>
+
+            {/* Row 2 */}
+            <div className="relative mt-4 overflow-hidden">
+              {/* Left Gradient */}
+              <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-background to-transparent" />
+
+              {/* Right Gradient */}
+              <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-background to-transparent" />
+
+              <motion.div
+                className="flex gap-4 w-max"
+                animate={{ x: ["-50%", "0%"] }}
+                transition={{
+                  repeat: Infinity,
+                  ease: "linear",
+                  duration: 55,
+                }}
+              >
+                {[
+                  "🎤 HR Round Practice",
+                  "🚀 Leadership Interviews",
+                  "📱 Mobile Development",
+                  "🌐 Web Development",
+                  "⚙️ Node.js",
+                  "🔷 Angular",
+                  "🧪 Coding Challenges",
+                  "📊 Product Interviews",
+                  "☁️ Cloud Fundamentals",
+                  "🧠 Problem Solving",
+                ]
+                  .concat([
+                    "🎤 HR Round Practice",
+                    "🚀 Leadership Interviews",
+                    "📱 Mobile Development",
+                    "🌐 Web Development",
+                    "⚙️ Node.js",
+                    "🔷 Angular",
+                    "🧪 Coding Challenges",
+                    "📊 Product Interviews",
+                    "☁️ Cloud Fundamentals",
+                    "🧠 Problem Solving",
+                  ])
+                  .map((item, index) => (
+                    <div
+                      key={index}
+                      className="group min-w-[240px] rounded-2xl border border-white/10 bg-card/40 backdrop-blur-xl px-6 py-5 flex items-center justify-center text-center hover:border-primary/50 transition duration-300"
+                    >
+                      <h3 className="text-lg font-semibold group-hover:text-primary transition">
+                        {item}
+                      </h3>
+                    </div>
+                  ))}
+              </motion.div>
+            </div>
           </div>
         </motion.section>
 

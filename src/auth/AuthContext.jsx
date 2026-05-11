@@ -41,7 +41,15 @@ export const AuthProvider = ({ children }) => {
       session,
       loading,
       signUpWithEmail: async (email, password) => {
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        return { error };
+      },
+      signInWithEmail: async (email, password) => {
+        const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
@@ -50,23 +58,7 @@ export const AuthProvider = ({ children }) => {
           return { error };
         }
 
-        const { error: profileError } = await supabase.from("profiles").upsert({
-          id: data.user.id,
-          email: data.user.email,
-        });
-
-        if (profileError) {
-          console.log(profileError);
-        }
-
         return { error: null };
-      },
-      signInWithEmail: async (email, password) => {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        return { error };
       },
       signInWithGoogle: async () => {
         await supabase.auth.signInWithOAuth({

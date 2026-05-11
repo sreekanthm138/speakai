@@ -141,7 +141,7 @@ export default function Header() {
                 <div className="absolute right-0 mt-4 w-64 rounded-2xl border border-white/10 bg-[#0f172a]/95 p-3 shadow-2xl ring-1 ring-white/10 backdrop-blur z-50">
                   {/* User Info */}
                   <div className="border-b border-white/10 px-4 py-3">
-                    <p className="font-semibold text-white">{userData.email}</p>
+                    <p className="text-sm text-white break-words">{userData.email}</p>
 
                     <p className="mt-1 text-sm text-gray-400">
                       SpeakAI Premium User

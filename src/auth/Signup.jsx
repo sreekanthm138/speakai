@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const { signUpWithEmail } = useAuth();
@@ -8,14 +9,28 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [err, setErr] = useState(null);
-
+  const navigate = useNavigate();
+  
   const onSubmit = async (e) => {
     e.preventDefault();
+
     setErr(null);
     setMessage(null);
+
     const { error } = await signUpWithEmail(email, password);
-    if (error) setErr(error.message);
-    else setMessage("Check your email to confirm your account.");
+
+    if (error) {
+      setErr(error.message);
+      return;
+    }
+
+    setMessage(
+      "Account created successfully. Please check your email and login.",
+    );
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
   };
 
   return (
