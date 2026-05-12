@@ -197,9 +197,30 @@ export default function Coach() {
       const data = await r.json();
       if (Array.isArray(data.questions) && data.questions.length) {
         setQList(data.questions);
+
+        // RESET ENTIRE INTERVIEW SESSION
         setQIndex(0);
+
+        setInterviewSeconds(0);
+
+        setCompletedAnswers([]);
+
+        setFeedback(null);
+
+        setFinalReport(null);
+
+        setTranscript("");
+
+        setInterim("");
+
+        setMetrics(null);
+
+        setShowFeedbackModal(false);
+
         cacheSet(key, data.questions);
+
         setLastGenKey(key);
+
         setControlsDirty(false);
       } else {
         alert(data.message || "Failed to generate questions. Try again.");
