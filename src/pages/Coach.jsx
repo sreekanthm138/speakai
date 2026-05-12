@@ -212,9 +212,6 @@ export default function Coach() {
         setTranscript("");
 
         setInterim("");
-
-        setMetrics(null);
-
         setShowFeedbackModal(false);
 
         cacheSet(key, data.questions);
@@ -222,12 +219,10 @@ export default function Coach() {
         setLastGenKey(key);
 
         setControlsDirty(false);
-      } 
-      // else {
-      //   alert(data.message || "Failed to generate questions. Try again.");
-      // }
+      } else {
+        alert(data.message || "Failed to generate questions. Try again.");
+      }
     } catch (e) {
-      console.error("GEN ERROR:", e);
       console.error(e);
       alert("Could not reach question generator.");
     } finally {
@@ -629,7 +624,12 @@ export default function Coach() {
                   className="btn btn-primary mt-2"
                   onClick={generate}
                   disabled={
-                    !role || !skill || !qType || !difficulty || !count || !controlsDirty
+                    !role ||
+                    !skill ||
+                    !qType ||
+                    !difficulty ||
+                    !count ||
+                    !controlsDirty
                   }
                 >
                   {controlsDirty ? "Generate Questions" : "Questions Ready"}
