@@ -104,6 +104,7 @@ export default function Coach() {
   const [finalReport, setFinalReport] = useState(null);
   const [finalLoading, setFinalLoading] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
   // Refs
   const micRef = useRef(null);
   const timer = useRef(null);
@@ -179,6 +180,7 @@ export default function Coach() {
 
   const generate = async () => {
     if (!controlsDirty) return; // nothing to do
+    setQuestionsLoading(true);
     try {
       const r = await fetch("/.netlify/functions/gen-questions", {
         method: "POST",
@@ -205,6 +207,8 @@ export default function Coach() {
     } catch (e) {
       console.error(e);
       alert("Could not reach question generator.");
+    } finally {
+      setQuestionsLoading(false);
     }
   };
 
@@ -412,54 +416,56 @@ export default function Coach() {
       </Helmet>
       <main className="container-p py-10">
         {/* Interview Session Bar */}
-        <div className="sticky top-20 z-30 mb-6">
-          <div className="rounded-2xl border border-white/10 bg-[#0F172A]/90 backdrop-blur-xl px-5 py-4 shadow-lg">
-            <div className="flex items-center justify-between gap-6 flex-wrap">
-              {/* LEFT */}
-              <div>
-                <p className="text-xs uppercase tracking-wider text-indigo-300">
-                  AI Interview Session
-                </p>
-
-                <h2 className="text-xl font-bold mt-1">
-                  {role || "Frontend"} Interview
-                </h2>
-              </div>
-
-              {/* CENTER */}
-              <div className="flex items-center gap-6 flex-wrap">
+        {!!qList.length && (
+          <div className="sticky top-20 z-30 mb-6">
+            <div className="rounded-2xl border border-white/10 bg-[#0F172A]/90 backdrop-blur-xl px-5 py-4 shadow-lg">
+              <div className="flex items-center justify-between gap-6 flex-wrap">
+                {/* LEFT */}
                 <div>
-                  <p className="text-xs text-muted">Progress</p>
-
-                  <p className="font-semibold mt-1">
-                    Question {qIndex + 1}/{qList.length}
+                  <p className="text-xs uppercase tracking-wider text-indigo-300">
+                    AI Interview Session
                   </p>
+
+                  <h2 className="text-xl font-bold mt-1">
+                    {role || "Frontend"} Interview
+                  </h2>
                 </div>
 
-                <div>
-                  <p className="text-xs text-muted">Difficulty</p>
+                {/* CENTER */}
+                <div className="flex items-center gap-6 flex-wrap">
+                  <div>
+                    <p className="text-xs text-muted">Progress</p>
 
-                  <p className="font-semibold mt-1">{difficultyQ}</p>
+                    <p className="font-semibold mt-1">
+                      Question {qIndex + 1}/{qList.length}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-muted">Difficulty</p>
+
+                    <p className="font-semibold mt-1">{difficultyQ}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-muted">Elapsed Time</p>
+
+                    <p className="font-semibold mt-1">
+                      {formatInterviewTime(interviewSeconds)}
+                    </p>
+                  </div>
                 </div>
 
-                <div>
-                  <p className="text-xs text-muted">Elapsed Time</p>
+                {/* RIGHT */}
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-emerald-400 animate-pulse" />
 
-                  <p className="font-semibold mt-1">
-                    {formatInterviewTime(interviewSeconds)}
-                  </p>
+                  <p className="text-sm text-emerald-300">AI Coach Active</p>
                 </div>
-              </div>
-
-              {/* RIGHT */}
-              <div className="flex items-center gap-3">
-                <div className="h-3 w-3 rounded-full bg-emerald-400 animate-pulse" />
-
-                <p className="text-sm text-emerald-300">AI Coach Active</p>
               </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="grid lg:grid-cols-[340px_1fr] gap-6">
           {/* LEFT SIDEBAR */}
           <aside className="space-y-6">
@@ -952,6 +958,21 @@ export default function Coach() {
                     </button>
                   </div>
                 </div>
+              </div>
+            )}
+            {/* Question Generation Loader */}
+            {questionsLoading && (
+              <div className="fixed inset-0 z-[70] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center">
+                <div className="h-24 w-24 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin" />
+
+                <h2 className="text-4xl font-bold mt-10">
+                  Generating Interview Questions...
+                </h2>
+
+                <p className="text-muted mt-4 max-w-md text-center leading-7">
+                  AI is preparing personalized interview questions based on your
+                  selected role, skill, and interview type.
+                </p>
               </div>
             )}
             {feedbackLoading && (
