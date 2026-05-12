@@ -1,6 +1,34 @@
 import React from "react";
 
-function InterviewWorkspace() {
+function InterviewWorkspace({
+  qList,
+  qIndex,
+  setQIndex,
+  transcript,
+  interim,
+  feedback,
+  metrics,
+  currentQuestion,
+  status,
+  setStatus,
+  seconds,
+  handleAppend,
+  resetAll,
+  loading,
+  feedbackLoading,
+  askAI,
+  micRef,
+  setTranscript,
+  setInterim,
+  followUpQuestion,
+  useCountdown,
+  setUseCountdown,
+  limit,
+  setLimit,
+  remaining,
+  prettyTime,
+  difficulty
+}) {
   return (
     <section className="space-y-6">
       {/* CURRENT QUESTION */}
@@ -173,8 +201,6 @@ function InterviewWorkspace() {
         </div>
       )}
 
-      
-      
       {/* <ProgressDashboard sessions={completedAnswers} /> */}
       {/* SAVED SESSIONS */}
       {/* <div className="card">

@@ -7,6 +7,7 @@ function InterviewSessionBar({
   difficultyQ,
   interviewSeconds,
   formatInterviewTime,
+  hasInterviewStarted,
 }) {
   return (
     // {/* Interview Session Bar */}

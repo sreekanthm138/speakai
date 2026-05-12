@@ -504,6 +504,7 @@ export default function Coach() {
               setLimit={setLimit}
               remaining={remaining}
               prettyTime={prettyTime}
+              difficulty={difficulty}
             />
           ) : (
             
