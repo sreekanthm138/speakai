@@ -69,11 +69,11 @@ function cacheSet(key, data) {
 /* --------------------------------- Component ---------------------------------- */
 export default function Coach() {
   // Question generator controls
-  const [role, setRole] = useState("Software Engineer");
-  const [skill, setSkill] = useState(ROLE_SKILLS["Software Engineer"][0]);
-  const [qType, setQType] = useState("behavioral"); // behavioral | technical | mixed
-  const [difficulty, setDifficulty] = useState("mixed"); // easy | medium | hard | mixed
-  const [count, setCount] = useState(5);
+  const [role, setRole] = useState("");
+  const [skill, setSkill] = useState("");
+  const [qType, setQType] = useState(""); // behavioral | technical | mixed
+  const [difficulty, setDifficulty] = useState(""); // easy | medium | hard | mixed
+  const [count, setCount] = useState("");
 
   // Generated questions & selection
   const [qList, setQList] = useState([]); // array of strings
@@ -222,9 +222,10 @@ export default function Coach() {
         setLastGenKey(key);
 
         setControlsDirty(false);
-      } else {
-        alert(data.message || "Failed to generate questions. Try again.");
-      }
+      } 
+      // else {
+      //   alert(data.message || "Failed to generate questions. Try again.");
+      // }
     } catch (e) {
       console.error(e);
       alert("Could not reach question generator.");
@@ -513,15 +514,26 @@ export default function Coach() {
                   <select
                     className="input bg-[#111827] text-white"
                     value={role}
-                    onChange={(e) => setRole(e.target.value)}
+                    onChange={(e) => {
+                      setRole(e.target.value);
+                      setSkill("");
+                    }}
                   >
-                    <option>Software Engineer</option>
-                    <option>Product Manager</option>
-                    <option>Data Analyst</option>
-                    <option>BPO/Support</option>
-                    <option>Marketing</option>
-                    <option>Sales</option>
-                    <option>Designer</option>
+                    <option value="">Select Target Role</option>
+
+                    <option value="Software Engineer">Software Engineer</option>
+
+                    <option value="Product Manager">Product Manager</option>
+
+                    <option value="Data Analyst">Data Analyst</option>
+
+                    <option value="BPO/Support">BPO/Support</option>
+
+                    <option value="Marketing">Marketing</option>
+
+                    <option value="Sales">Sales</option>
+
+                    <option value="Designer">Designer</option>
                   </select>
                 </div>
 
@@ -533,7 +545,12 @@ export default function Coach() {
                     className="input bg-[#111827] text-white"
                     value={skill}
                     onChange={(e) => setSkill(e.target.value)}
+                    disabled={!role}
                   >
+                    <option value="">
+                      {role ? "Select Skill" : "Select Role First"}
+                    </option>
+
                     {ROLE_SKILLS[role]?.map((s) => (
                       <option key={s} value={s}>
                         {s}
@@ -556,6 +573,8 @@ export default function Coach() {
                     value={qType}
                     onChange={(e) => setQType(e.target.value)}
                   >
+                    <option value="">Select Interview Type</option>
+
                     <option value="behavioral">Behavioral</option>
 
                     <option value="technical">Technical</option>
@@ -573,9 +592,14 @@ export default function Coach() {
                     value={difficulty}
                     onChange={(e) => setDifficulty(e.target.value)}
                   >
+                    <option value="">Select Difficulty</option>
+
                     <option value="easy">Easy</option>
+
                     <option value="medium">Medium</option>
+
                     <option value="hard">Hard</option>
+
                     <option value="mixed">Mixed</option>
                   </select>
                 </div>
@@ -589,9 +613,13 @@ export default function Coach() {
                     value={count}
                     onChange={(e) => setCount(Number(e.target.value))}
                   >
-                    <option value="3">3</option>
-                    <option value="5">5</option>
-                    <option value="8">8</option>
+                    <option value="">Select Question Count</option>
+
+                    <option value="3">3 Questions</option>
+
+                    <option value="5">5 Questions</option>
+
+                    <option value="8">8 Questions</option>
                   </select>
                 </div>
 
@@ -599,7 +627,9 @@ export default function Coach() {
                 <button
                   className="btn btn-primary mt-2"
                   onClick={generate}
-                  disabled={!controlsDirty}
+                  disabled={
+                    !role || !skill || !qType || !difficulty || !count || !controlsDirty
+                  }
                 >
                   {controlsDirty ? "Generate Questions" : "Questions Ready"}
                 </button>
@@ -629,7 +659,7 @@ export default function Coach() {
             )}
 
             {/* QUESTIONS */}
-            <div className="card">
+            {/* <div className="card">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-bold">Questions</h3>
 
@@ -670,7 +700,7 @@ export default function Coach() {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </aside>
 
           {/* RIGHT CONTENT */}
@@ -1314,6 +1344,20 @@ export default function Coach() {
                             : "Generate Final Report"}
                         </button>
                       )}
+                      <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 flex items-start gap-3">
+                        <div className="h-3 w-3 rounded-full bg-emerald-400 mt-2 shrink-0" />
+
+                        <div>
+                          <p className="font-semibold text-emerald-300">
+                            Interview saved successfully
+                          </p>
+
+                          <p className="text-sm text-muted mt-1 leading-6">
+                            Your AI interview report and performance analytics
+                            are now available in the Dashboard section.
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
