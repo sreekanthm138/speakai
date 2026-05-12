@@ -227,6 +227,7 @@ export default function Coach() {
       //   alert(data.message || "Failed to generate questions. Try again.");
       // }
     } catch (e) {
+      console.error("GEN ERROR:", e);
       console.error(e);
       alert("Could not reach question generator.");
     } finally {
