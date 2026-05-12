@@ -507,9 +507,7 @@ export default function Coach() {
               difficulty={difficulty}
             />
           ) : (
-            
-              <InterviewEmptyState />
-            
+            <InterviewEmptyState />
           )}
           {questionsLoading && (
             <div className="fixed inset-0 z-[70] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center">

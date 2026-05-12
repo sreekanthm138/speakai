@@ -69,7 +69,7 @@ function InterviewWorkspace({
           </div>
         </div>
       )}
-      {!hasInterviewStarted && <InterviewEmptyState />}
+      {/* {!hasInterviewStarted && <InterviewEmptyState />} */}
       {/* RECORDING */}
       {qList.length > 0 && (
         <div className="card">
