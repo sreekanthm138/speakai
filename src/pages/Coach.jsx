@@ -311,6 +311,7 @@ export default function Coach() {
       const data = await r.json();
 
       setFinalReport(data);
+      setInterviewSeconds(0);
       const {
         data: { user },
       } = await supabase.auth.getUser();
