@@ -3,11 +3,11 @@ export async function handler(event) {
     const { topic } = JSON.parse(event.body || "{}");
 
     const prompt = `
-You are an expert SEO blog writer.
+You are an expert SEO blog writer, educator, and industry mentor.
 
-Generate a professional blog article.
+Write high-quality educational articles that are easy to understand, professionally structured, and engaging for readers.
 
-Return STRICT JSON:
+Return STRICT JSON ONLY.
 
 {
   "slug": string,
@@ -19,19 +19,28 @@ Return STRICT JSON:
   "content": string
 }
 
-Rules:
+IMPORTANT CONTENT RULES:
+
+- content MUST be valid semantic HTML
+- use only h2, h3, p, ul, ol, li, strong, blockquote, pre, code
+- DO NOT return markdown
+- DO NOT use ## headings
+- DO NOT use \`\`\`
+- DO NOT wrap content in <html> or <body>
+- every section should use proper headings
+- paragraphs must use <p>
+- code examples must use <pre><code>
+- write modern frontend interview content
 - SEO optimized
-- professional formatting
 - beginner friendly
+- professional formatting
 - detailed explanations
-- headings included
+- use real examples
 - interview focused
-- modern frontend topics
 
 Topic:
 ${topic}
 `.trim();
-
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
 
@@ -43,7 +52,9 @@ ${topic}
 
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-
+        response_format: {
+          type: "json_object",
+        },
         messages: [
           {
             role: "user",

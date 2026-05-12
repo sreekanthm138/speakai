@@ -41,9 +41,12 @@ export default function Post() {
 
         setHeadings(extractedHeadings);
 
-        data.content = doc.body.innerHTML;
+        const formattedContent = doc.body.innerHTML;
 
-        setBlog(data);
+        setBlog({
+          ...data,
+          content: formattedContent,
+        });
         const { data: related } = await supabase
           .from("blogs")
           .select("*")
@@ -64,7 +67,7 @@ export default function Post() {
     return (
       <>
         <Helmet>
-            <title>{`${blog?.title} | SpeakAI`}</title>
+          <title>{`${blog?.title} | SpeakAI`}</title>
 
           <meta name="description" content={blog?.description} />
 
@@ -126,7 +129,7 @@ export default function Post() {
               <span>12 min read</span>
             </div>
 
-            <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+            <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
               {blog.title}
             </h1>
 
