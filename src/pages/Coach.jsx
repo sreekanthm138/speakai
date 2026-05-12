@@ -396,7 +396,7 @@ export default function Coach() {
 
     return `${mins}m ${sec}s`;
   };
-  const difficulty = qIndex <= 1 ? "Easy" : qIndex <= 3 ? "Medium" : "Hard";
+  const difficultyQ = qIndex <= 1 ? "Easy" : qIndex <= 3 ? "Medium" : "Hard";
   /* ----------------------------------- UI ------------------------------------ */
   return (
     <>
@@ -439,7 +439,7 @@ export default function Coach() {
                 <div>
                   <p className="text-xs text-muted">Difficulty</p>
 
-                  <p className="font-semibold mt-1">{difficulty}</p>
+                  <p className="font-semibold mt-1">{difficultyQ}</p>
                 </div>
 
                 <div>
