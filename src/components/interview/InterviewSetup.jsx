@@ -33,28 +33,33 @@ function InterviewSetup({
           AI Interview Coach
         </h1>
 
-        <p className="text-muted mt-2 max-w-xl leading-6 text-[15px]">
-          Practice role-specific interviews, improve communication, and receive
-          AI-powered feedback.
-        </p>
+        {!hasInterviewStarted && (
+          <p className="text-muted mt-2 leading-6">
+            Practice role-specific interviews...
+          </p>
+        )}
       </div>
 
       {/* SETUP */}
-      <div className="card w-full p-5 flex flex-col">
+      <div className="card w-full p4 flex flex-col">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold">Interview Setup</h2>
+            <h2 className="text-2xl leading-tight font-bold">
+              Interview Setup
+            </h2>
 
             <p className="text-sm text-muted mt-1">
               Configure your personalized AI mock interview.
             </p>
           </div>
 
-          {hasInterviewStarted && (
-            <div className="rounded-full border border-indigo-500/20 bg-indigo-500/10 px-4 py-2 text-sm text-indigo-300">
-              AI Session Active
-            </div>
-          )}
+          <div
+            className={`rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-300 transition-all duration-300 ${
+              hasInterviewStarted ? "px-3 py-1.5 text-xs" : "px-4 py-2 text-sm"
+            }`}
+          >
+            AI Session Active
+          </div>
         </div>
 
         {/* FORM GRID */}
@@ -197,7 +202,7 @@ function InterviewSetup({
         )}
 
         {/* CTA */}
-        <div className="mt-auto pt-5 flex justify-end sticky bottom-0 bg-gradient-to-t from-[#0b1120] to-transparent">
+        <div className="mt-auto pt-5 flex justify-end">
           <button
             className="btn btn-primary min-w-[220px] shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40"
             onClick={generate}
