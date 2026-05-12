@@ -150,7 +150,7 @@ function FeedbackModal({
             <div className="space-y-6">
               {/* Summary */}
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <h3 className="text-xl font-semibold mb-5">Summary</h3>
+                <h3 className="text-xl font-semibold mb-5">Interview Coach Feedback</h3>
 
                 <p className="text-muted leading-7 text-base">
                   {feedback?.summary}
@@ -178,7 +178,7 @@ function FeedbackModal({
               {!!feedback?.improvements?.length && (
                 <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-5">
                   <h3 className="text-xl font-semibold mb-5 text-yellow-300">
-                    Improvements
+                    Ways To Improve
                   </h3>
 
                   <ul className="space-y-4 text-muted">
@@ -195,7 +195,7 @@ function FeedbackModal({
               {feedback?.recommendation && (
                 <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5">
                   <h3 className="text-xl font-semibold mb-5 text-emerald-300">
-                    AI Recommendation
+                    Recommended Next Steps
                   </h3>
 
                   <p className="text-muted leading-7 text-base">
